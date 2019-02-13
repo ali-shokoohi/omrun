@@ -3,6 +3,7 @@
 *.py[co]
 .tox/
 .venv/
+.idea/
 __pycache__
 MANIFEST
 dist/
