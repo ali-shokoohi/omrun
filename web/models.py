@@ -11,6 +11,7 @@ class Employees(models.Model):
         return self.name
 
 class Purchases(models.Model):
+    buyer = models.ForeignKey(Employees, on_delete=models.CASCADE)
     amount = models.BigIntegerField(null=False)
     for_what = models.TextField(null=False)
     date = models.TextField()
