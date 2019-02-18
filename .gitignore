@@ -4,6 +4,7 @@
 .tox/
 .venv/
 .idea/
+.vscode/
 __pycache__
 MANIFEST
 dist/
