@@ -2,7 +2,7 @@ from django.db import models
 
 class Employees(models.Model):
     name = models.TextField(null=False)
-    personnelـid = models.BigIntegerField(max_length=16, null=False, primary_key=True)
+    personnelـid = models.BigIntegerField(null=False, primary_key=True)
     password = models.CharField(max_length=64, null=False)
     email = models.CharField(max_length=32)
     profile_pic = models.CharField(max_length=20)
