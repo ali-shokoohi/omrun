@@ -17,4 +17,4 @@ class Purchases(models.Model):
     date = models.TextField()
 
     def __str__(self):
-        return self.amount
+        return str(self.amount)
