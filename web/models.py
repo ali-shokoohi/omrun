@@ -8,3 +8,11 @@ class Employees(models.Model):
 
     def __str__(self):
         return self.name
+
+class Purchases(models.Model):
+    amount = models.BigIntegerField(null=False)
+    for_what = models.TextField(null=False)
+    date = models.TextField()
+
+    def __str__(self):
+        return self.amount
