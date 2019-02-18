@@ -5,6 +5,7 @@ class Employees(models.Model):
     personnelـid = models.BigIntegerField(max_length=16, null=False, primary_key=True)
     password = models.CharField(max_lenght=32, null=False)
     email = models.CharField(max_lenght=32)
+    profile_pic = models.CharField(max_length=20)
 
     def __str__(self):
         return self.name
