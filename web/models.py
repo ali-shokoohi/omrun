@@ -35,4 +35,4 @@ class Comments(models.Model):
     date = models.TextField()
 
     def __str__(self):
-        return self.author
+        return str(self.author)

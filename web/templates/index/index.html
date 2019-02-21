@@ -436,30 +436,14 @@
 					<div class="col-md-12 animate-box">
 						<div class="about-flex">
 							<div class="col-half">
-								<a href="#" class="staff-img" style="background-image: url({% static 'web/images/person1.jpg' %});">
+								{% for employee in employees %}
+								<a href="#" class="staff-img" style="background-image: url({% static 'web/images/'%}{{ employee.profile_pic }});">
 									<div class="desc-staff">
-										<h3>Ian Moore</h3>
-										<span>Electrician</span>
+										<h3>{{ employee.name }}</h3>
+										<span>{{ employee.post }}</span>
 									</div>
 								</a>
-								<a href="#" class="staff-img" style="background-image: url({% static 'web/images/person2.jpg' %});">
-									<div class="desc-staff">
-										<h3>Jack Clark</h3>
-										<span>Engineer</span>
-									</div>
-								</a>
-								<a href="#" class="staff-img" style="background-image: url({% static 'web/images/person3.jpg' %});">
-									<div class="desc-staff">
-										<h3>Kiven Lewis</h3>
-										<span>Architect</span>
-									</div>
-								</a>
-								<a href="#" class="staff-img" style="background-image: url({% static 'web/images/person4.jpg' %});">
-									<div class="desc-staff">
-										<h3>Charles Scott</h3>
-										<span>Assistant Engineer</span>
-									</div>
-								</a>
+								{% endfor %}
 							</div>
 							<div class="col-half text-right">
 								<div class="desc">
@@ -529,45 +513,21 @@
 					<div class="col-md-8 col-md-offset-2 text-center">
 						<div class="row animate-box">
 							<div class="owl-carousel1">
+								{% for comment in comments %}
 								<div class="item">
 									<div class="testimony-slide">
 										<div class="testimony-wrap">
 											<figure>
-												<img src="{% static 'web/images/person1.jpg' %}" alt="user">
+												<img src="{% static 'web/images/' %}{{ comment.author.profile_pic }}" alt="Picture">
 											</figure>
 											<blockquote>
-												<span>Andrew Field</span>
-												<p>نظر مشتری در اینجا.</p>
+												<span>{{ comment.author }}</span>
+												<p>{{ comment.text }}</p>
 											</blockquote>
 										</div>
 									</div>
 								</div>
-								<div class="item">
-									<div class="testimony-slide">
-										<div class="testimony-wrap">
-											<figure>
-												<img src="{% static 'web/images/person2.jpg' %}" alt="user">
-											</figure>
-											<blockquote>
-												<span>Mark Bubble</span>
-												<p>نظر مشتری در اینجا.</p>
-											</blockquote>
-										</div>
-									</div>
-								</div>
-								<div class="item">
-									<div class="testimony-slide">
-										<div class="testimony-wrap">
-											<figure>
-												<img src="{% static 'web/images/person3.jpg' %}" alt="user">
-											</figure>
-											<blockquote>
-												<span>Adam Smith</span>
-												<p>نظر مشتری در اینجا.</p>
-											</blockquote>
-										</div>
-									</div>
-								</div>
+								{% endfor %}
 							</div>
 						</div>
 					</div>

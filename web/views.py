@@ -1,6 +1,13 @@
 from django.shortcuts import render
+from .models import Employees, Comments
 
 
 def index(request):
-    return render(request=request, template_name="index/index.html")
+    employees = Employees.objects.all()
+    comments = Comments.objects.all()
+    context = {
+        "employees": employees,
+        "comments": comments,
+        }
+    return render(request=request, template_name="index/index.html", context=context)
 
