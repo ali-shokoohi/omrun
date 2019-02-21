@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Employees, Comments
 from hashlib import md5
 
@@ -29,7 +29,7 @@ def index(request):
 
 def login(request):
     if request.session.has_key('user_id'):
-        return HttpResponse(content="You logged at last!")
+        return HttpResponseRedirect(redirect_to="/dashboard/")
     else:
        if request.method == 'POST':
             if ("username" in request.POST) and ("password" in request.POST):
@@ -37,7 +37,7 @@ def login(request):
                 password = request.POST['password']
                 if logging(username, password) is True:
                     request.session['user_id'] = username
-                    return HttpResponse(content="You logged successfully!")
+                    return HttpResponseRedirect(redirect_to="/dashboard/")
                 else:
                     error = "!نام کاربری یا کلمه عبود اشتباه میباشد"
                     context = {
@@ -52,3 +52,10 @@ def login(request):
                 return render(request=request, template_name="login/login.html", context=context)
        else:
            return render(request=request, template_name="login/login.html")
+
+def dashboard(request):
+    if request.session.has_key('user_id'):
+        return HttpResponse(content="Noting here yet!")
+    else:
+        return HttpResponseRedirect(redirect_to="/login/")
+        
