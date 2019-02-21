@@ -19,3 +19,9 @@ class Purchases(models.Model):
 
     def __str__(self):
         return str(self.amount)
+
+class Clients(models.Model):
+    name = models.TextField(null=False)
+    email = models.CharField(max_length=32)
+    password = models.CharField(max_length=64, null=False)
+    profile_pic = models.CharField(max_length=20)
