@@ -25,3 +25,14 @@ class Clients(models.Model):
     email = models.CharField(max_length=32)
     password = models.CharField(max_length=64, null=False)
     profile_pic = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+class Comments(models.Model):
+    author = models.ForeignKey(Clients, on_delete=models.CASCADE)
+    text = models.TextField(null=False)
+    date = models.TextField()
+
+    def __str__(self):
+        return self.author
