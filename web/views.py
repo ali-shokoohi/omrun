@@ -76,3 +76,9 @@ def dashboard(request):
         #If not session is here redirect to login/ url
         return HttpResponseRedirect(redirect_to="/login/")
         
+#Action of logout/ path url
+def logout(request):
+    #Check old sessions
+    if request.session.has_key('user_id'):
+        del request.session['user_id']
+    return HttpResponseRedirect(redirect_to="/login/")
