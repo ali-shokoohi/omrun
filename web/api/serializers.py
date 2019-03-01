@@ -9,3 +9,4 @@ class Purchases_serializers(serializers.ModelSerializer):
 class Comments_serializers(serializers.ModelSerializer):
     class Meta:
         model = Comments
+        fields = ("author", "text", "date")
