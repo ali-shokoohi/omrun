@@ -71,7 +71,7 @@ def login(request):
 def dashboard(request):
     #Check old sessions
     if request.session.has_key('user_id'):
-        return HttpResponse(content="Noting here yet!")
+        return HttpResponse(content="Noting yet here! <a href='/logout/'>Logout</a>")
     else:
         #If not session is here redirect to login/ url
         return HttpResponseRedirect(redirect_to="/login/")
