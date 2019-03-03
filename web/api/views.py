@@ -2,7 +2,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, parser_classes
-from ..models import Employees
+from web.models import Employees
 from hashlib import md5
 #/=========================================================
 
