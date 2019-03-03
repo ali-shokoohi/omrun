@@ -52,7 +52,7 @@ def login(request, format=None):
             status = 403
             result = {
                 "status": "bad",
-                "status": "Username or password was incorrent"
+                "error": "Username or password was incorrent"
             }
     else:
         status = 405
