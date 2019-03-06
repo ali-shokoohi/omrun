@@ -44,9 +44,17 @@ def login(request, format=None):
         status = 200
         #Check authentication of request
         if logging(username, password) is True:
+            #Send user's information
+            user = Employees.objects.filter(personnelـid=username).get()
             result = {
                 "status": "ok",
-                "message": "Authentication was successful"
+                "information": {
+                    "name": user.name,
+                    "post": user.post,
+                    "personnelـid": user.personnelـid,
+                    "email": user.email,
+                    "profile_pic": user.profile_pic
+                }
             }
         else:
             status = 403
