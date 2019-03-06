@@ -1,67 +1,82 @@
-{% load static %}
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <title>صفحه ورود</title>
-        <link href="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-   
-        <!--Bootsrap 4 CDN-->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        
-        <!--Fontawesome CDN-->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+{% extends "base.html" %}
 
-        <!--Custom styles-->
-        <link rel="stylesheet" type="text/css" href="{% static 'web/css/login.css' %}">
-    </head>
-    <body style="background-image: url({% static 'web/images/login.jpg' %});">
-        <div class="container text-right">
-            <div class="d-flex justify-content-center h-100">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>ورود</h3>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST">
-                            {% csrf_token %}
-                            <div class="input-group form-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+{% load static %}
+
+{% block include %}
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!--Bootsrap 4 CDN-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+    <!--Fontawesome CDN-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+    <!--Custom styles-->
+    <link rel="stylesheet" type="text/css" href="{% static 'web/css/login.css' %}">
+{% endblock include %}
+
+{% block title %}صفحه ورود{% endblock title %}
+
+{% block top %}
+	<ul class="slides">
+		<li style="background-image: url({% static 'web/images/img_bg_4.jpg' %});">
+			<div class="overlay"></div>
+			<div class="container-fluid">
+				<div class="row">
+					<daboveiv class="col-md-8 col-sm-12 col-md-offset-2 slider-text">
+						<div class="slider-text-inner text-center">
+                        <div class="container text-right"  style="background-image: url({% static 'web/images/login.jpg' %});">
+                            <div class="d-flex justify-content-center h-100">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3>ورود</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <form method="POST">
+                                            {% csrf_token %}
+                                            <div class="input-group form-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                                </div>
+                                                <input name="username" type="text" class="form-control text-right" placeholder="نام کاربری">
+                                                
+                                            </div>
+                                            <div class="input-group form-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                                </div>
+                                                <input name="password" type="password" class="form-control text-right" placeholder="گذرواژه">
+                                            </div>
+                                            <div class="row align-items-right text-right float-right remember">
+                                                من را به خاطر بسپار<input type="checkbox">
+                                            </div>
+                                            <div class="form-group text-left">
+                                                <input type="submit" value="ورود" class="btn float-left login_btn">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    {% if error %}
+                                        <div class="d-flex justify-content-center text-right text-danger">
+                                            {{ error }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="card-footer text-right">
+                                        <div class="d-flex justify-content-center text-right links">
+                                            <a href="#">ثبت نام</a> قبلا ثبت نام نکردید؟
+                                        </div>
+                                        <div class="d-flex justify-content-center text-right">
+                                            <a href="#">رمز خود را فراموش کردید؟</a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <input name="username" type="text" class="form-control text-right" placeholder="نام کاربری">
-                                
                             </div>
-                            <div class="input-group form-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
-                                </div>
-                                <input name="password" type="password" class="form-control text-right" placeholder="گذرواژه">
-                            </div>
-                            <div class="row align-items-right text-right float-right remember">
-                                من را به خاطر بسپار<input type="checkbox">
-                            </div>
-                            <div class="form-group text-left">
-                                <input type="submit" value="ورود" class="btn float-left login_btn">
-                            </div>
-                        </form>
-                    </div>
-                    {% if error %}
-                        <div class="d-flex justify-content-center text-right text-danger">
-                            {{ error }}
                         </div>
-                    {% endif %}
-                    <div class="card-footer text-right">
-                        <div class="d-flex justify-content-center text-right links">
-                            <a href="#">ثبت نام</a> قبلا ثبت نام نکردید؟
-                        </div>
-                        <div class="d-flex justify-content-center text-right">
-                            <a href="#">رمز خود را فراموش کردید؟</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
-</html>
+						</div>
+					</daboveiv>
+				</div>
+			</div>
+        </li>
+    </ul>
+{% endblock top %}
