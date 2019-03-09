@@ -15,7 +15,7 @@ def logging(username, password):
     try:
         user_check = Employees.objects.filter(personnelـid=username).exists()
         if user_check is True:
-            user = Employees.objects.filter(personnelـid=username).get()
+            user = Employees.objects.get(personnelـid=username)
             pass_hash = md5(password.encode("utf-8")).hexdigest()
             if user.password == pass_hash:
                 return True
@@ -49,7 +49,7 @@ def login(request, format=None):
         #Check authentication of request
         if logging(username, password) is True:
             #Send user's information
-            user = Employees.objects.filter(personnelـid=username).get()
+            user = Employees.objects.get(personnelـid=username)
             result = {
                 "status": "ok",
                 "information": {
