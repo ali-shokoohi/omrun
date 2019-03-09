@@ -40,8 +40,6 @@ def index(request, format=None):
 #View of api/login/ url
 @api_view(['post'])
 @parser_classes((JSONParser,))
-@authentication_classes((TokenAuthentication,))
-@permission_classes((IsAuthenticated,))
 def login(request, format=None):
     #Request should have "username" and "password" params
     if "username" in request.data and "password" in request.data:
@@ -75,3 +73,8 @@ def login(request, format=None):
             "error": "Send all params"
         }
     return Response(status=status, data=result)
+
+#Where Token is neccesarry
+#@authentication_classes((TokenAuthentication,))
+#@permission_classes((IsAuthenticated,))
+#def ...:
