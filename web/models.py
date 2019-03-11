@@ -1,15 +1,17 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+
+#Modify django user or use this
+class User(AbstractUser):
+    pass
 
 class Employees(models.Model):
-    name = models.TextField(null=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     post = models.TextField(null=False)
-    personnelـid = models.BigIntegerField(null=False, primary_key=True)
-    password = models.CharField(max_length=64, null=False)
-    email = models.CharField(max_length=32)
     profile_pic = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.name
+        return self.user.first_name
 
 class Purchases(models.Model):
     buyer = models.ForeignKey(Employees, on_delete=models.CASCADE)
@@ -21,13 +23,11 @@ class Purchases(models.Model):
         return str(self.amount)
 
 class Clients(models.Model):
-    name = models.TextField(null=False)
-    email = models.CharField(max_length=32)
-    password = models.CharField(max_length=64, null=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.name
+        return self.user.first_name
 
 class Comments(models.Model):
     author = models.ForeignKey(Clients, on_delete=models.CASCADE)
