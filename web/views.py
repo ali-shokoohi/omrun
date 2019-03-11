@@ -2,16 +2,17 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Employees, Comments
 from hashlib import md5
+from django.contrib.auth.hashers import check_password
 #/=========================================================
 
 #Check authentication of login request
 def logging(username, password):
     try:
-        user_check = Employees.objects.filter(personnelـid=username).exists()
+        user_check = User.objects.filter(username=username).exists()
         if user_check is True:
-            user = Employees.objects.filter(personnelـid=username).get()
-            pass_hash = md5(password.encode("utf-8")).hexdigest()
-            if user.password == pass_hash:
+            user = User.objects.get(username=username)
+            pass_check = check_password(password, user.password)
+            if pass_check is True:
                 return True
             else:
                 return False
