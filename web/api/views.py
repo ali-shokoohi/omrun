@@ -6,18 +6,18 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-from web.models import Employees
-from hashlib import md5
+from web.models import User, Employees, Clients
+from django.contrib.auth.hashers import check_password
 #/=========================================================
 
 #Check authentication of login request
 def logging(username, password):
     try:
-        user_check = Employees.objects.filter(personnelـid=username).exists()
+        user_check = User.objects.filter(username=username).exists()
         if user_check is True:
-            user = Employees.objects.get(personnelـid=username)
-            pass_hash = md5(password.encode("utf-8")).hexdigest()
-            if user.password == pass_hash:
+            user = User.objects.get(username=username)
+            pass_check = check_password(password, user.password)
+            if pass_check is True:
                 return True
             else:
                 return False
@@ -49,15 +49,19 @@ def login(request, format=None):
         #Check authentication of request
         if logging(username, password) is True:
             #Send user's information
-            user = Employees.objects.get(personnelـid=username)
+            user = User.objects.get(username=username)
+            name = user.first_name+' '+user.last_name
+            employee = Employees.objects.get(user=user)
+            token = Token.objects.get(user=user)
             result = {
                 "status": "ok",
                 "information": {
-                    "name": user.name,
-                    "post": user.post,
-                    "personnelـid": user.personnelـid,
+                    "name": name,
+                    "post": employee.post,
+                    "personnelـid": user.username,
                     "email": user.email,
-                    "profile_pic": user.profile_pic
+                    "profile_pic": employee.profile_pic,
+                    "token": token.key
                 }
             }
         else:
