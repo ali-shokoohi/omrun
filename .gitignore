@@ -2,6 +2,7 @@
 *.pot
 *.py[co]
 *.sqlite3
+*secrets.py
 .tox/
 .venv/
 .idea/
