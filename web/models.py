@@ -29,7 +29,7 @@ class Clients(models.Model):
     def __str__(self):
         return self.user.first_name
 
-class Comments(models.Model):
+class CommentsOfWeb(models.Model):
     author = models.ForeignKey(Clients, on_delete=models.CASCADE)
     text = models.TextField(null=False)
     date = models.TextField()
@@ -52,3 +52,11 @@ class Plans(models.Model):
 
     def __str__(self):
         return self.project.name
+
+class Photos(models.Model):
+    project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+    image = models.ImageField()
+
+    def __str__(self):
+        return self.project.name
+
