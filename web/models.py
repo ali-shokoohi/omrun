@@ -42,4 +42,13 @@ class Projects:
     employer = models.OneToOneField(Employees, on_delete=models.CASCADE)
 
     def __str__(self):
-        return slef.name
+        return self.name
+
+class Plans:
+    project = models.OneToOneField(Projects, on_delete=models.CASCADE)
+    photo = models.ImageField()
+    data = models.TextField()
+    kind = models.TextField()
+
+    def __str__(self):
+        return self.project.name
