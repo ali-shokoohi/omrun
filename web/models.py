@@ -37,15 +37,15 @@ class Comments(models.Model):
     def __str__(self):
         return str(self.author)
 
-class Projects:
+class Projects(models.Model):
     name = models.TextField(null=False)
     employer = models.OneToOneField(Employees, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
-class Plans:
-    project = models.OneToOneField(Projects, on_delete=models.CASCADE)
+class Plans(models.Model):
+    project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     photo = models.ImageField()
     data = models.TextField()
     kind = models.TextField()
