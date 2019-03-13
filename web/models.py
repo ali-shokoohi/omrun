@@ -67,4 +67,13 @@ class Comments(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return str(self.author)
+        return self.author.first_name
+
+class Likes(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ForeignKey(Photos, on_delete=models.CASCADE)
+    Numbers = models.IntegerField()
+    date = models.DateField()
+
+    def __str__(self):
+        return self.author.first_name
