@@ -36,3 +36,10 @@ class Comments(models.Model):
 
     def __str__(self):
         return str(self.author)
+
+class Projects:
+    name = models.TextField(null=False)
+    employer = models.OneToOneField(Employees, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return slef.name
