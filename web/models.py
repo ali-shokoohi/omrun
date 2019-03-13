@@ -17,7 +17,7 @@ class Purchases(models.Model):
     buyer = models.ForeignKey(Employees, on_delete=models.CASCADE)
     amount = models.BigIntegerField(null=False)
     for_what = models.TextField(null=False)
-    date = models.TextField()
+    date = models.DateField()
 
     def __str__(self):
         return str(self.amount)
@@ -32,7 +32,7 @@ class Clients(models.Model):
 class CommentsOfWeb(models.Model):
     author = models.ForeignKey(Clients, on_delete=models.CASCADE)
     text = models.TextField(null=False)
-    date = models.TextField()
+    date = models.DateField()
 
     def __str__(self):
         return str(self.author)
@@ -60,3 +60,11 @@ class Photos(models.Model):
     def __str__(self):
         return self.project.name
 
+class Comments(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ForeignKey(Photos, on_delete=models.CASCADE)
+    text = models.TextField(null=False)
+    date = models.DateField()
+
+    def __str__(self):
+        return str(self.author)
