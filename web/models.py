@@ -39,7 +39,7 @@ class CommentsOfWeb(models.Model):
 
 class Projects(models.Model):
     name = models.TextField(null=False)
-    employer = models.OneToOneField(Employees, on_delete=models.CASCADE)
+    employer = models.ForeignKey(Employees, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
