@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Employees, Comments
+from .models import User, Employees, CommentsOfWeb
 from hashlib import md5
 from django.contrib.auth.hashers import check_password
 #/=========================================================
@@ -26,7 +26,7 @@ def logging(username, password):
 #View of / path url
 def index(request):
     employees = Employees.objects.all()#Get all employees
-    comments = Comments.objects.all()#Get all comments
+    comments = CommentsOfWeb.objects.all()#Get all comments
     context = {
         "employees": employees,
         "comments": comments,
