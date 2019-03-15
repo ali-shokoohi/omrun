@@ -6,7 +6,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-from web.models import User, Employees, Clients
+from web.models import User, Employees, Clients, Projects
 from django.contrib.auth.hashers import check_password
 #/=========================================================
 
@@ -32,9 +32,18 @@ def logging(username, password):
 @api_view(['post'])
 @parser_classes((JSONParser,))
 def index(request, format=None):
+    #Get prjects informations
+    projects = Projects.objects.all()
+    project_list = list()
+    for project in projects:
+        projects_dict = dict()
+        projects_dict["name"] = project.name
+        projects_dict["employer"] = project.employer
+        project_list.append(projects_dict)
     return Response(status=200, data={
         "status": "ok",
-        "message": "Hello"
+        "message": "Hello",
+        "projects": project_list
     })
 
 #View of api/login/ url
