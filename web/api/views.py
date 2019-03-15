@@ -37,8 +37,9 @@ def index(request, format=None):
     project_list = list()
     for project in projects:
         projects_dict = dict()
+        projects_dict["id"] = project.id
         projects_dict["name"] = project.name
-        projects_dict["employer"] = project.employer
+        projects_dict["employer"] = project.employer.user.first_name
         project_list.append(projects_dict)
     return Response(status=200, data={
         "status": "ok",
