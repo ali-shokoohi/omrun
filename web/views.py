@@ -49,7 +49,7 @@ def login(request):
                 if logging(username, password) is True:
                     #Set new session and redirect to dashboard/ url
                     request.session['user_id'] = username
-                    return HttpResponseRedirect(redirect_to="/dashboard/")
+                    return HttpResponseRedirect(redirect_to="/dashbord/")
                 else:
                     error = "!نام کاربری یا کلمه عبود اشتباه میباشد"
                     context = {
@@ -68,11 +68,21 @@ def login(request):
             #Open login.html file and pass context to that
             return render(request=request, template_name="login/login.html")
 
-#View of dashboard/ path url
-def dashboard(request):
+#View of dashbord/ path url
+def dashbord(request):
     #Check old sessions
     if request.session.has_key('user_id'):
-        return HttpResponse(content="Noting yet here! <a href='/logout/'>Logout</a>")
+        username = request.session.get('user_id')
+        print("User id is:", type(username), username)
+        #Get user by username (user-id)
+        user = User.objects.get(username=username)#TODO: maybe user-id is fake!
+        #Get empoyee via user
+        employee = Employees.objects.get(user=user)
+        context = {
+            "user": employee,
+            #...
+        }
+        return render(request=request, template_name="dashbord/index.html", context=context)
     else:
         #If not session is here redirect to login/ url
         return HttpResponseRedirect(redirect_to="/login/")
