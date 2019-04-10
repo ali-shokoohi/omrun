@@ -85,7 +85,12 @@
 										<li class="text-right"><a href="#">در دست ساخت</a></li>
 									</ul>
 								</li>
-								<li class="active"><a href="index.html">خانه</a></li>
+								{% if login is True %}
+										<li class=""><a href="/dashbord/">داشبورد</a></li>
+								{% else %}
+										<li class=""><a href="/login/">ورود</a></li>
+								{% endif %}
+								<li class="active"><a href="/">خانه</a></li>
 							</ul>
 						</div>
 					</div>

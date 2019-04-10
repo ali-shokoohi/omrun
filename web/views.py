@@ -27,9 +27,14 @@ def logging(username, password):
 def index(request):
     employees = Employees.objects.all()#Get all employees
     comments = CommentsOfWeb.objects.all()#Get all comments
+    if request.session.has_key('user_id'):
+        has_login = True
+    else:
+        has_login = False
     context = {
         "employees": employees,
         "comments": comments,
+        "login": has_login,
         }
     #Open template file and pass context to that
     return render(request=request, template_name="index/index.html", context=context)
