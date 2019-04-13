@@ -43,7 +43,7 @@ def index(request):
 def login(request):
     #Check old sessions
     if request.session.has_key('user_id'):
-        return HttpResponseRedirect(redirect_to="/dashboard/")
+        return HttpResponseRedirect(redirect_to="/dashbord/")
     else:
         #Checking new received datas
         if request.method == 'POST':
