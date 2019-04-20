@@ -98,3 +98,20 @@ def logout(request):
     if request.session.has_key('user_id'):
         del request.session['user_id']
     return HttpResponseRedirect(redirect_to="/login/")
+
+#View of user/profile/
+def profile(request):
+    #Check old sessions
+    if request.session.has_key('user_id'):
+        username = request.session.get('user_id')
+        user = User.objects.get(username=username)#TODO: maybe user-id is fake!
+        #Get empoyee via user
+        employee = Employees.objects.get(user=user)
+        context = {
+            "user": employee,
+            #...
+        }
+        return render(request=request, template_name="profile/index.html", context=context)
+    else:
+        #If not session is here redirect to login/ url
+        return HttpResponseRedirect(redirect_to="/login/")
