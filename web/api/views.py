@@ -6,7 +6,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-from web.models import User, Employees, Clients, Projects
+from web.models import User, Employees, Clients, Projects, Plans
 from django.contrib.auth.hashers import check_password
 #/=========================================================
 
@@ -25,6 +25,21 @@ def logging(username, password):
             return False
     except:
         return False
+
+# Return plans as a dictionary
+def getPlans(plan):
+    #Extract objects
+    photo = plan.photo
+    data = plan.data
+    kind = plan.kind
+    #Insert to a dictionary
+    result = dict()
+    result["status"] = "ok"
+    result["photo"] = photo
+    result["data"] = data
+    result["kind"] = kind
+
+    return result
 
 #============================Views===========================
 
@@ -85,6 +100,33 @@ def login(request, format=None):
         result = {
             "status": "bad",
             "error": "Send all params"
+        }
+    return Response(status=status, data=result)
+
+#View of api/plans/ url
+@api_view(['post'])
+@parser_classes((JSONParser,))
+def plans(request, format=None):
+    if "project-id" in request.data:
+        project_id = request.data["project-id"]
+        #check project was exists or not
+        exists = Projects.objects.filter(id=project_id).exists()
+        if exists is True:
+            project = Projects.objects.get(id=project_id)
+            plan = Plans.objects.get(project=project)
+            status = 200
+            result = getPlans(plan)
+        else:
+            status = 400
+            result = {
+                "status": "bad",
+                "error": "Project not found"
+            }
+    else:
+        status = 405
+        result = {
+            "status": "bad",
+            "error": "Send project number"
         }
     return Response(status=status, data=result)
 
