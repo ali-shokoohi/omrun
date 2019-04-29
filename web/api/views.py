@@ -47,19 +47,9 @@ def getPlans(plan):
 @api_view(['post'])
 @parser_classes((JSONParser,))
 def index(request, format=None):
-    #Get prjects informations
-    projects = Projects.objects.all()
-    project_list = list()
-    for project in projects:
-        projects_dict = dict()
-        projects_dict["id"] = project.id
-        projects_dict["name"] = project.name
-        projects_dict["employer"] = project.employer.user.first_name
-        project_list.append(projects_dict)
     return Response(status=200, data={
         "status": "ok",
-        "message": "Hello",
-        "projects": project_list
+        "message": "Hello!"
     })
 
 #View of api/login/ url
@@ -103,6 +93,23 @@ def login(request, format=None):
         }
     return Response(status=status, data=result)
 
+#View of api/projects/ url
+@api_view(['post'])
+@parser_classes((JSONParser,))
+def projects(request, format=None):
+    #Get prjects informations
+    projects = Projects.objects.all()
+    project_list = list()
+    for project in projects:
+        projects_dict = dict()
+        projects_dict["id"] = project.id
+        projects_dict["name"] = project.name
+        projects_dict["employer"] = project.employer.user.first_name
+        project_list.append(projects_dict)
+    return Response(status=200, data={
+        "status": "ok",
+        "projects": project_list
+    })
 #View of api/plans/ url
 @api_view(['post'])
 @parser_classes((JSONParser,))
