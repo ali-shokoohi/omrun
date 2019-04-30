@@ -1,13 +1,13 @@
-from rest_framework.parsers import JSONParser
+#rom rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view, parser_classes
-from rest_framework.decorators import authentication_classes, permission_classes
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+#from rest_framework.authentication import TokenAuthentication
+#from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from web.models import User, Employees, Clients, Projects, Plans
+from web.api.serializers import Projects_Serializers, PLans_Serializers
 from django.contrib.auth.hashers import check_password
+from django.http import Http404
 #/=========================================================
 
 #Check authentication of login request
@@ -26,118 +26,74 @@ def logging(username, password):
     except:
         return False
 
-# Return plans as a dictionary
-def getPlans(plan):
-    #Extract objects
-    photo = plan.photo
-    data = plan.data
-    kind = plan.kind
-    #Insert to a dictionary
-    result = dict()
-    result["status"] = "ok"
-    result["photo"] = photo
-    result["data"] = data
-    result["kind"] = kind
-
-    return result
-
 #============================Views===========================
 
 #View of api/ url
-@api_view(['post'])
-@parser_classes((JSONParser,))
-def index(request, format=None):
-    return Response(status=200, data={
-        "status": "ok",
-        "message": "Hello!"
-    })
+class index(APIView):
+    def post(self, request, format=None):
+        return Response(status=200, data={
+            "status": "ok",
+            "message": "Hello!"
+        })
 
 #View of api/login/ url
-@api_view(['post'])
-@parser_classes((JSONParser,))
-def login(request, format=None):
-    #Request should have "username" and "password" params
-    if "username" in request.data and "password" in request.data:
-        username = request.data["username"]
-        password = request.data["password"]
-        status = 200
-        #Check authentication of request
-        if logging(username, password) is True:
-            #Send user's information
-            user = User.objects.get(username=username)
-            name = user.first_name+' '+user.last_name
-            employee = Employees.objects.get(user=user)
-            token = Token.objects.get(user=user)
-            result = {
-                "status": "ok",
-                "information": {
-                    "name": name,
-                    "post": employee.post,
-                    "personnelـid": user.username,
-                    "email": user.email,
-                    "profile_pic": employee.profile_pic,
-                    "token": token.key
+class login(APIView):
+    def post(self, request, format=None):
+        #Request should have "username" and "password" params
+        if "username" in request.data and "password" in request.data:
+            username = request.data["username"]
+            password = request.data["password"]
+            status = 200
+            #Check authentication of request
+            if logging(username, password) is True:
+                #Send user's information
+                user = User.objects.get(username=username)
+                name = user.first_name+' '+user.last_name
+                employee = Employees.objects.get(user=user)
+                token = Token.objects.get(user=user)
+                result = {
+                    "status": "ok",
+                    "information": {
+                        "name": name,
+                        "post": employee.post,
+                        "personnelـid": user.username,
+                        "email": user.email,
+                        "profile_pic": employee.profile_pic,
+                        "token": token.key
+                    }
                 }
-            }
+            else:
+                status = 403
+                result = {
+                    "status": "bad",
+                    "error": "Username or password was incorrent"
+                }
         else:
-            status = 403
+            status = 405
             result = {
                 "status": "bad",
-                "error": "Username or password was incorrent"
+                "error": "Send all params"
             }
-    else:
-        status = 405
-        result = {
-            "status": "bad",
-            "error": "Send all params"
-        }
-    return Response(status=status, data=result)
+        return Response(status=status, data=result)
 
 #View of api/projects/ url
-@api_view(['post'])
-@parser_classes((JSONParser,))
-def projects(request, format=None):
-    #Get prjects informations
-    projects = Projects.objects.all()
-    project_list = list()
-    for project in projects:
-        projects_dict = dict()
-        projects_dict["id"] = project.id
-        projects_dict["name"] = project.name
-        projects_dict["employer"] = project.employer.user.first_name
-        project_list.append(projects_dict)
-    return Response(status=200, data={
-        "status": "ok",
-        "projects": project_list
-    })
-#View of api/plans/ url
-@api_view(['post'])
-@parser_classes((JSONParser,))
-def plans(request, format=None):
-    if "project-id" in request.data:
-        project_id = request.data["project-id"]
-        #check project was exists or not
-        exists = Projects.objects.filter(id=project_id).exists()
-        if exists is True:
-            project = Projects.objects.get(id=project_id)
-            plan = Plans.objects.get(project=project)
-            status = 200
-            result = getPlans(plan)
-        else:
-            status = 400
-            result = {
-                "status": "bad",
-                "error": "Project not found"
-            }
-    else:
-        status = 405
-        result = {
-            "status": "bad",
-            "error": "Send project number"
-        }
-    return Response(status=status, data=result)
+class projects(APIView):
+    def post(self, request, format=None):
+        all_projects = Projects.objects.all()
+        serializer = Projects_Serializers(all_projects, many=True)
+        return Response(status=200, data={
+            "status": "ok",
+            "projects": serializer.data
+        })
 
-#Where Token is neccesarry
-#@authentication_classes((TokenAuthentication,))
-#@permission_classes((IsAuthenticated,))
-#def ...:
+#View of api/plans/ url
+class plans(APIView):
+    def get_object(self, pk):
+        try:
+            return Projects.objects.get(pk=pk)
+        except Projects.DoesNotExist:
+            raise Http404
+    def post(self, request, pk, format=None):
+        project = self.get_object(pk)
+        serializer = PLans_Serializers(project)
+        return Response(status=200, data=serializer)
