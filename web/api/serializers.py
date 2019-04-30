@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from ..models import Purchases, Comments
+from web.models import Purchases, Comments, Projects
+
+#Serializer of Purchases model
+class Projects_Serializers(serializers.ModelSerializer):
+    class Meta:
+        model = Projects
+        fields = ("id", "name", "employer")
 
 #Serializer of Purchases model
 class Purchases_serializers(serializers.ModelSerializer):
