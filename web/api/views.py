@@ -2,29 +2,14 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 #from rest_framework.authentication import TokenAuthentication
-#from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from web.models import User, Employees, Clients, Projects, Plans
-from web.api.serializers import Projects_Serializers, PLans_Serializers
+from web.api.serializers import Projects_Serializers, PLans_Serializers, Employees_Serializers
 from django.contrib.auth.hashers import check_password
 from django.http import Http404
 #/=========================================================
-
-#Check authentication of login request
-def logging(username, password):
-    try:
-        user_check = User.objects.filter(username=username).exists()
-        if user_check is True:
-            user = User.objects.get(username=username)
-            pass_check = check_password(password, user.password)
-            if pass_check is True:
-                return True
-            else:
-                return False
-        else:
-            return False
-    except:
-        return False
 
 #============================Views===========================
 
@@ -38,43 +23,17 @@ class index(APIView):
 
 #View of api/login/ url
 class login(APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
     def post(self, request, format=None):
-        #Request should have "username" and "password" params
-        if "username" in request.data and "password" in request.data:
-            username = request.data["username"]
-            password = request.data["password"]
-            status = 200
-            #Check authentication of request
-            if logging(username, password) is True:
-                #Send user's information
-                user = User.objects.get(username=username)
-                name = user.first_name+' '+user.last_name
-                employee = Employees.objects.get(user=user)
-                token = Token.objects.get(user=user)
-                result = {
-                    "status": "ok",
-                    "information": {
-                        "name": name,
-                        "post": employee.post,
-                        "personnelـid": user.username,
-                        "email": user.email,
-                        "profile_pic": employee.profile_pic,
-                        "token": token.key
-                    }
-                }
-            else:
-                status = 403
-                result = {
-                    "status": "bad",
-                    "error": "Username or password was incorrent"
-                }
-        else:
-            status = 405
-            result = {
-                "status": "bad",
-                "error": "Send all params"
-            }
-        return Response(status=status, data=result)
+        user = request.user
+        employee = Employees.objects.get(user=user)
+        serializer = Employees_Serializers(employee)
+        result = {
+            "status": "ok",
+            "information":serializer.data
+        }
+        return Response(status=200, data=result)
 
 #View of api/projects/ url
 class projects(APIView):
