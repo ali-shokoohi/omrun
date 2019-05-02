@@ -39,7 +39,10 @@ class CommentsOfWeb(models.Model):
 
 class Projects(models.Model):
     name = models.TextField(null=False)
+    price = models.BigIntegerField(null=False)
+    done = models.BooleanField()
     employer = models.ForeignKey(Employees, on_delete=models.CASCADE)
+    client = models.ForeignKey(Clients, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
