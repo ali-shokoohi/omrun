@@ -8,18 +8,23 @@ class Token_Serializers(serializers.ModelSerializer):
         model = Token
         fileds = ("key",)
 
-#Serializer of User model
-class User_Serializers(serializers.ModelSerializer):
+#Private serializer of User model
+class User_Serializers_Private(serializers.ModelSerializer):
     #token = Token_Serializers(required=True)
     class Meta:
         model = User
         fields = ("first_name", "last_name", "username", "email")
         #TODO: Add token field also ...
 
+#Public serializer of User model
+class User_Serializers_Public(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "email")
 
 #Serializer of Employees
 class Employees_Serializers(serializers.ModelSerializer):
-    user = User_Serializers(required=True)
+    user = User_Serializers_Public(required=True)
 
     class Meta:
         model = Employees
