@@ -58,7 +58,7 @@
 	{% block include %}
 	{% endblock include %}
 	</head>
-	<body>
+	<body dir="rtl">
 		
 	<div class="colorlib-loader"></div>
 
@@ -72,10 +72,12 @@
 						</div>
 						<div class="col-xs-10 text-right menu-1">
 							<ul>
-								<li><a href="contact.html">تماس با ما</a></li>
-								<li><a href="about.html">درباره ما</a></li>
-								<li><a href="blog.html">وبلاگ</a></li>
-								<li><a href="services.html">خدمات</a></li>
+								<li class="active"><a href="/">خانه</a></li>
+								{% if login is True %}
+										<li class=""><a href="/dashbord/">داشبورد</a></li>
+								{% else %}
+										<li class=""><a href="/login/">ورود</a></li>
+								{% endif %}
 								<li class="has-dropdown">
 									<a href="project.html">پروژه ها</a>
 									<ul class="dropdown">
@@ -85,12 +87,10 @@
 										<li class="text-right"><a href="#">در دست ساخت</a></li>
 									</ul>
 								</li>
-								{% if login is True %}
-										<li class=""><a href="/dashbord/">داشبورد</a></li>
-								{% else %}
-										<li class=""><a href="/login/">ورود</a></li>
-								{% endif %}
-								<li class="active"><a href="/">خانه</a></li>
+								<li><a href="contact.html">تماس با ما</a></li>
+								<li><a href="about.html">درباره ما</a></li>
+								<li><a href="blog.html">وبلاگ</a></li>
+								<li><a href="services.html">خدمات</a></li>
 							</ul>
 						</div>
 					</div>
@@ -151,14 +151,14 @@
 					<div class="col-md-3 col-md-push-1 colorlib-widget">
 						<h4>مشخصات</h4>
 						<p>
-							<ul class="colorlib-footer-links">
-								<li><a href="#">شرکت ما <i class="icon-check"></i></a></li>
-								<li><a href="#">گواهینامه ها <i class="icon-check"></i></a></li>
-								<li><a href="#">خدمات ما <i class="icon-check"></i></a></li>
-								<li><a href="#">حرفه ما <i class="icon-check"></i></a></li>
-								<li><a href="#">ارزش های اصلی <i class="icon-check"></i></a></li>
-								<li><a href="#">تاریخچه شرکت <i class="icon-check"></i></a></li>
-								<li><a href="#">سوالات متداول <i class="icon-check"></i></a></li>
+							<ul class="colorlib-footer-links text-left">
+								<li><a href="#"><i class="icon-check"></i> شرکت ما</a></li>
+								<li><a href="#"><i class="icon-check"></i> گواهینامه ها</a></li>
+								<li><a href="#"><i class="icon-check"></i> خدمات ما</a></li>
+								<li><a href="#"><i class="icon-check"></i> حرفه ما</a></li>
+								<li><a href="#"><i class="icon-check"></i> ارزش های اصلی</a></li>
+								<li><a href="#"><i class="icon-check"></i> تاریخچه شرکت</a></li>
+								<li><a href="#"><i class="icon-check"></i> سوالات متداول</a></li>
 							</ul>
 						</p>
 					</div>
