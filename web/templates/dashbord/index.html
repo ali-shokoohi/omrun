@@ -124,10 +124,14 @@
                                                             <div class="m-r-10"><img src="{% static 'dashbord/images/product-pic-2.jpg' %}" alt="user" class="rounded" width="45"></div>
                                                         </td>
                                                         <td>{{project.name}}</td>
-                                                        <td>$180.00</td>
+                                                        <td>${{project.price}}</td>
                                                         <td>25-08-2018 21:12:56</td>
-                                                        <td>Rachel J. Wicker </td>
-                                                        <td>اتمام <span class="badge-dot badge-success mr-1"></span></td>
+                                                        <td> {{ project.client.user.first_name }} {{ project.client.user.last_name }} </td>
+                                                        {% if project.done is True %}
+                                                            <td>اتمام <span class="badge-dot badge-success mr-1"></span></td>
+                                                        {% else %}
+                                                            <td>در ‌دست ‌انجام <span class="badge-dot badge-brand mr-1"></span></td>
+                                                        {% endif %}
                                                     </tr>
                                                     {% endfor %}
                                                     <tr>
