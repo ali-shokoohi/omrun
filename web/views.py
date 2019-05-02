@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import User, Employees, CommentsOfWeb
+from .models import User, Employees, CommentsOfWeb, Projects
 from hashlib import md5
 from django.contrib.auth.hashers import check_password
 #/=========================================================
@@ -83,8 +83,10 @@ def dashbord(request):
         user = User.objects.get(username=username)#TODO: maybe user-id is fake!
         #Get empoyee via user
         employee = Employees.objects.get(user=user)
+        projects = Projects.objects.all()
         context = {
             "user": employee,
+            "projects": projects,
             #...
         }
         return render(request=request, template_name="dashbord/index.html", context=context)
