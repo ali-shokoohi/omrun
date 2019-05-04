@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from web.models import Purchases, Comments, Projects, Plans, User, Employees
+from web.models import Purchases, Comments, Projects, Plans, User, Employees, Geographical
 from rest_framework.authtoken.models import Token
 
 #Serializer of Token model
@@ -29,13 +29,21 @@ class Employees_Serializers(serializers.ModelSerializer):
     class Meta:
         model = Employees
         fields = ("user", "post", "profile_pic")
+
+#Serializer of Geographical
+class Geographical_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Geographical
+        fields = ("location", "latitude", "longitude")
+
 #Serializer of Purchases model
 class Projects_Serializers(serializers.ModelSerializer):
     employer = Employees_Serializers(required=True)
+    geographical = Geographical_Serializer(required=True)
 
     class Meta:
         model = Projects
-        fields = ("id", "name", "employer")
+        fields = ("id", "name", "start_date", "price", "done", "employer", "geographical")
 
 class PLans_Serializers(serializers.ModelSerializer):
     class Meta:

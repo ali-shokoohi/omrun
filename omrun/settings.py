@@ -12,8 +12,9 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
-#Import SECRET_KEY from secrets.py
+#Import SECRET_KEY and database informations from secrets.py
 from .secrets import SECRET_KEY
+from .secrets import DB_NAME, DB_USER, DB_PASSWORD
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,7 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.137.132', '192.168.43.238', '192.168.1.4', '192.168.42.134', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -81,8 +82,14 @@ WSGI_APPLICATION = 'omrun.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -111,12 +118,12 @@ REST_FRAMEWORK = {
 #    'DEFAULT_PERMISSION_CLASSES': (
 #        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
 #    ),
-    'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.JSONParser',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    )
+     'DEFAULT_PARSER_CLASSES': (
+         'rest_framework.parsers.JSONParser',
+     ),
+     'DEFAULT_AUTHENTICATION_CLASSES': (
+         'rest_framework.authentication.TokenAuthentication',
+     )
 }
 
 # Internationalization

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+#from django.utils import timezone
 
 #Modify django user or use this
 class User(AbstractUser):
@@ -37,10 +38,21 @@ class CommentsOfWeb(models.Model):
     def __str__(self):
         return str(self.author)
 
+class Geographical(models.Model):
+    location = models.TextField()
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+
+    def __str__(self):
+        return "{0}:{1}".format(self.latitude, self.longitude)
+
 class Projects(models.Model):
     name = models.TextField(null=False)
     price = models.BigIntegerField(null=False)
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(auto_now_add=True)
     done = models.BooleanField()
+    geographical = models.ForeignKey(Geographical, on_delete=models.CASCADE)
     employer = models.ForeignKey(Employees, on_delete=models.CASCADE)
     client = models.ForeignKey(Clients, on_delete=models.CASCADE)
 

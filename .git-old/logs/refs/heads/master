@@ -1,0 +1,115 @@
+0000000000000000000000000000000000000000 408a9974b39435a8fc3d5e0022cb1a2985a19d6c Ali Shokoohi <alishokoohi666@gmail.com> 1550060333 +0330	commit (initial): Initial commit!
+408a9974b39435a8fc3d5e0022cb1a2985a19d6c b596ed844f5e89d4c4062875b39ab9e8dbe3651b Ali Shokoohi <alishokoohi666@gmail.com> 1550060405 +0330	commit: Start the web app
+b596ed844f5e89d4c4062875b39ab9e8dbe3651b 5f9c5feee654b022ff39021a64c1513c09d703cb Ali Shokoohi <alishokoohi666@gmail.com> 1550060552 +0330	commit: Say hello from web app view
+5f9c5feee654b022ff39021a64c1513c09d703cb 4a75f021ebfcbb77cb1d0d4b99ee07ab13197d2d Ali Shokoohi <alishokoohi666@gmail.com> 1550060651 +0330	commit: Genrate urls config file for web app
+4a75f021ebfcbb77cb1d0d4b99ee07ab13197d2d 1706efeb52ddb16b7e8116bba76b33b3dabc7f24 Ali Shokoohi <alishokoohi666@gmail.com> 1550060862 +0330	commit: Link web/* path urls to web/urls.py
+1706efeb52ddb16b7e8116bba76b33b3dabc7f24 b5328fb272ef2a424b67013f35704232e8542334 Ali Shokoohi <alishokoohi666@gmail.com> 1550060994 +0330	commit: Before migrate!
+b5328fb272ef2a424b67013f35704232e8542334 a607d277cc1d0030403482c443dc0bfce4cac8dc Ali Shokoohi <alishokoohi666@gmail.com> 1550061042 +0330	commit: First migrate!
+a607d277cc1d0030403482c443dc0bfce4cac8dc 47b20e4daa4fd03920cfc0c44ee7c591d9a419b7 Ali Shokoohi <alishokoohi666@gmail.com> 1550065363 +0330	commit: Any url must controling by web/url.py except admin/
+47b20e4daa4fd03920cfc0c44ee7c591d9a419b7 89d4012a2e0603b7102b9b68737a8c194d37239d Ali Shokoohi <alishokoohi666@gmail.com> 1550065408 +0330	commit: Fix urls file
+89d4012a2e0603b7102b9b68737a8c194d37239d 1c438ae730622c7f26c8847a2432a407a2ac73fc Ali Shokoohi <alishokoohi666@gmail.com> 1550076592 +0330	commit: Create templates directory
+1c438ae730622c7f26c8847a2432a407a2ac73fc 3719b5766b5452fa1b37bb810cd3424a2a6cd894 Ali Shokoohi <alishokoohi666@gmail.com> 1550077432 +0330	commit: Create static directory
+3719b5766b5452fa1b37bb810cd3424a2a6cd894 98157f2481025e81145fe1959e813556176c12b9 Ali Shokoohi <alishokoohi666@gmail.com> 1550077518 +0330	commit: Ignore .idea directory
+98157f2481025e81145fe1959e813556176c12b9 6d39520a0607326ef5bd847d5bd9812aad477753 Ali Shokoohi <alishokoohi666@gmail.com> 1550086808 +0330	commit: Add web app tp ISNTALLED_APPS
+6d39520a0607326ef5bd847d5bd9812aad477753 f925afcfe0574e819f152eee0a5926b3b7bfabd8 Ali Shokoohi <alishokoohi666@gmail.com> 1550487153 +0330	commit: Ignore .vscode/ directory
+f925afcfe0574e819f152eee0a5926b3b7bfabd8 6718ff50f3388b47b25fd4b9837fc155a415291e Ali Shokoohi <alishokoohi666@gmail.com> 1550487182 +0330	commit: Working with static files
+6718ff50f3388b47b25fd4b9837fc155a415291e 6a4bc11bcf38abff63716dfc7b1b4a47602e4e5d Ali Shokoohi <alishokoohi666@gmail.com> 1550492172 +0330	commit: Add class Employees model
+6a4bc11bcf38abff63716dfc7b1b4a47602e4e5d e079bc8dab9c1f3b523706275ec7a15ae557e938 Ali Shokoohi <alishokoohi666@gmail.com> 1550492627 +0330	commit: Fix Employees model
+e079bc8dab9c1f3b523706275ec7a15ae557e938 171d56320768bae562a8021449cfe9d53dfb353b Ali Shokoohi <alishokoohi666@gmail.com> 1550493187 +0330	commit: Add class Purchases model
+171d56320768bae562a8021449cfe9d53dfb353b 3e4978a6787d8dc8fa2db532e0cff47133a8669c Ali Shokoohi <alishokoohi666@gmail.com> 1550493394 +0330	commit: Add profile_pic field to Employees model
+3e4978a6787d8dc8fa2db532e0cff47133a8669c 4526bad82bc65189d8119c3afb99a258a2dfab7d Ali Shokoohi <alishokoohi666@gmail.com> 1550493643 +0330	commit: Change Employees password max_lenght to 64 for hashes
+4526bad82bc65189d8119c3afb99a258a2dfab7d fb234f5cb8fb8146b879e43be2f60d36eab4db67 Ali Shokoohi <alishokoohi666@gmail.com> 1550493754 +0330	commit: Ignore db.sqlite3 database
+fb234f5cb8fb8146b879e43be2f60d36eab4db67 fa0815a129150255f35f9c6d57ffc37f9010dcd8 Ali Shokoohi <alishokoohi666@gmail.com> 1550493888 +0330	commit: Change max_lenght to max_length
+fa0815a129150255f35f9c6d57ffc37f9010dcd8 e1bf7828a77beff86ab5c64169165d6de58257bd Ali Shokoohi <alishokoohi666@gmail.com> 1550494235 +0330	commit: Ignore *.sqlite3 databases
+e1bf7828a77beff86ab5c64169165d6de58257bd bce27605c56b4ccbf00a2296a19f02b424bc0dae Ali Shokoohi <alishokoohi666@gmail.com> 1550494326 +0330	commit: Come on! do not see db.sqlite3 changes!
+bce27605c56b4ccbf00a2296a19f02b424bc0dae 55c7e750e7266dbddabfc82d8b8bbf9af4c85704 Ali Shokoohi <alishokoohi666@gmail.com> 1550495507 +0330	commit: Creat ForeignKey field from Purchases to Employees
+55c7e750e7266dbddabfc82d8b8bbf9af4c85704 3056c183bab47bc08d206e0824e81ca22b80175d Ali Shokoohi <alishokoohi666@gmail.com> 1550519967 +0330	commit: Return str value in __str__ function
+3056c183bab47bc08d206e0824e81ca22b80175d fbd6e326a0d4a7d14d9cd3ef3b2c147d3b61a2ae Ali Shokoohi <alishokoohi666@gmail.com> 1550520400 +0330	commit: Remove max_length from IntegerField
+fbd6e326a0d4a7d14d9cd3ef3b2c147d3b61a2ae a6351c52ba8d57e57c7c1d7f8d6c2ddb6e3e4dd7 Ali Shokoohi <alishokoohi666@gmail.com> 1550737406 +0330	commit: Add post field to Employees model
+a6351c52ba8d57e57c7c1d7f8d6c2ddb6e3e4dd7 b13c6cdf9b2780ad4fc715b95011296e28f987d8 Ali Shokoohi <alishokoohi666@gmail.com> 1550738524 +0330	commit: Add class Clients model
+b13c6cdf9b2780ad4fc715b95011296e28f987d8 5e48e08f2b538a50865bd90e1df1e7da2d362778 Ali Shokoohi <alishokoohi666@gmail.com> 1550738804 +0330	commit: Add class Comments model
+5e48e08f2b538a50865bd90e1df1e7da2d362778 d87a9ac7f110b3449e00471d69fc695bc8bfaf4d Ali Shokoohi <alishokoohi666@gmail.com> 1550745569 +0330	commit: Users default profile_pic
+d87a9ac7f110b3449e00471d69fc695bc8bfaf4d d571edad6b39fed251c11f14ea44042a7b14ebc4 Ali Shokoohi <alishokoohi666@gmail.com> 1550745596 +0330	commit: Using data from database in templates!
+d571edad6b39fed251c11f14ea44042a7b14ebc4 05e80771572cf99b9070e051760f52fc908ec3b2 Ali Shokoohi <alishokoohi666@gmail.com> 1550760466 +0330	commit: Creating login/ path url and save sessions
+05e80771572cf99b9070e051760f52fc908ec3b2 7126a697c866c2d7772f8041385dfcaa5435b78a Ali Shokoohi <alishokoohi666@gmail.com> 1550762853 +0330	commit: Creating dashboard/ path url
+7126a697c866c2d7772f8041385dfcaa5435b78a c8de01ce5082593655597a3e23020c04afff09ca Ali Shokoohi <alishokoohi666@gmail.com> 1550763479 +0330	commit: Add some comments
+c8de01ce5082593655597a3e23020c04afff09ca 2639ad2b8ec7f350091149b7ab5715777354e76a Ali Shokoohi <alishokoohi666@gmail.com> 1550919298 +0330	commit: Creating logout/ path url and remove sessions
+2639ad2b8ec7f350091149b7ab5715777354e76a eece53d9f8f76792f8519c16f81bcc4af5e23d7f Ali Shokoohi <alishokoohi666@gmail.com> 1551459415 +0330	commit: Update views.py file
+eece53d9f8f76792f8519c16f81bcc4af5e23d7f 54a11b5a544f932151f740f871bf647cd3865255 Ali Shokoohi <alishokoohi666@gmail.com> 1551466145 +0330	commit: Import rest freamwork
+54a11b5a544f932151f740f871bf647cd3865255 e9393d442b60b337c1f5ca0c4d6851160a177696 Ali Shokoohi <alishokoohi666@gmail.com> 1551467458 +0330	commit: Set JSONParser as Default parser
+e9393d442b60b337c1f5ca0c4d6851160a177696 fe816f9be5dd0d0f2390d4a53da6d99654c02cb4 Ali Shokoohi <alishokoohi666@gmail.com> 1551467738 +0330	commit: Update settings.py
+fe816f9be5dd0d0f2390d4a53da6d99654c02cb4 541a9e6b56202c425545b64d90149e3d18318b10 Ali Shokoohi <alishokoohi666@gmail.com> 1551470199 +0330	commit: Update settings.py
+541a9e6b56202c425545b64d90149e3d18318b10 c115278a4a98310d66efdbe1380b66b51e619ba3 Ali Shokoohi <alishokoohi666@gmail.com> 1551470224 +0330	commit: link to the api views
+c115278a4a98310d66efdbe1380b66b51e619ba3 2fc8949cab856cf0b395439a6836044977b26601 Ali Shokoohi <alishokoohi666@gmail.com> 1551472187 +0330	commit: Add api login view
+2fc8949cab856cf0b395439a6836044977b26601 9bde13dbc8af134b8288e6868274000750594d88 Ali Shokoohi <alishokoohi666@gmail.com> 1551472239 +0330	commit: set login view url
+9bde13dbc8af134b8288e6868274000750594d88 dfb7b9cfd30c96662cd3f6793aa133df4ceb6bc2 Ali Shokoohi <alishokoohi666@gmail.com> 1551477359 +0330	commit: Create serializers file
+dfb7b9cfd30c96662cd3f6793aa133df4ceb6bc2 229291507c2eb54c24817154d5e473e3f6c463dc Ali Shokoohi <alishokoohi666@gmail.com> 1551477631 +0330	commit: Set fields to Purchases serializer
+229291507c2eb54c24817154d5e473e3f6c463dc efe13ab0425624990481adb67a202dd24a0d1663 Ali Shokoohi <alishokoohi666@gmail.com> 1551477684 +0330	commit: Set fields to Comments serializer
+efe13ab0425624990481adb67a202dd24a0d1663 78fc4d930741cc023498e79dfb443539dbc7ed03 Ali Shokoohi <alishokoohi666@gmail.com> 1551478051 +0330	commit: write comments!
+78fc4d930741cc023498e79dfb443539dbc7ed03 33af7a5be4b03126d9a7e492b6bd3cb14547f0ba Ali Shokoohi <alishokoohi666@gmail.com> 1551597978 +0330	commit: Fix the response keys
+33af7a5be4b03126d9a7e492b6bd3cb14547f0ba 5645f6851539e09772cff3ab3f67ca50d2e47c85 Ali Shokoohi <alishokoohi666@gmail.com> 1551598079 +0330	commit: Change model import style
+5645f6851539e09772cff3ab3f67ca50d2e47c85 8d3d55736962ba65ad4172bfd31b3436046b6068 Ali Shokoohi <alishokoohi666@gmail.com> 1551598350 +0330	commit: Change views import style
+8d3d55736962ba65ad4172bfd31b3436046b6068 b9f20b33cc36049c11238891e5306dcbb05d8fc9 Ali Shokoohi <alishokoohi666@gmail.com> 1551706223 +0330	commit: Create base.html template
+b9f20b33cc36049c11238891e5306dcbb05d8fc9 319777b37e15b948c1c44ea93ac1a6bf187ae9fb Ali Shokoohi <alishokoohi666@gmail.com> 1551706463 +0330	commit: Close div tag in top block
+319777b37e15b948c1c44ea93ac1a6bf187ae9fb 383a371106cd365d8c6c617d5a8d55a638d601fd Ali Shokoohi <alishokoohi666@gmail.com> 1551710974 +0330	commit: Move to top level
+383a371106cd365d8c6c617d5a8d55a638d601fd 1cbd109cbfdbd126e0fda31695a92945fd63edff Ali Shokoohi <alishokoohi666@gmail.com> 1551711156 +0330	commit: Include more things
+1cbd109cbfdbd126e0fda31695a92945fd63edff 14940e3485fe1ed3a934692beccc6b9e9028e373 Ali Shokoohi <alishokoohi666@gmail.com> 1551712960 +0330	commit: Add include block
+14940e3485fe1ed3a934692beccc6b9e9028e373 5bd9b47fbde2b9d2fe109a17fb96987fa677dfbb Ali Shokoohi <alishokoohi666@gmail.com> 1551712999 +0330	commit: Move to top level
+5bd9b47fbde2b9d2fe109a17fb96987fa677dfbb 769cb8ac8dfc8939f0df33592dcf5687ad91509c Ali Shokoohi <alishokoohi666@gmail.com> 1551713046 +0330	commit: Working with base.html
+769cb8ac8dfc8939f0df33592dcf5687ad91509c d988ebd478ee5ef1a849779cbb217e46a7990f3d Ali Shokoohi <alishokoohi666@gmail.com> 1551880753 +0330	commit: Send user information
+d988ebd478ee5ef1a849779cbb217e46a7990f3d 86a5ccd1bafdf1584d7b03b718c35b0a1e6975ba Ali Shokoohi <alishokoohi666@gmail.com> 1551881525 +0330	commit: extends base.html
+86a5ccd1bafdf1584d7b03b718c35b0a1e6975ba 38827bd1a13ced74485f429ab8cd9d237642da25 Ali Shokoohi <alishokoohi666@gmail.com> 1551973085 +0330	commit: Use rest auth&authtoken
+38827bd1a13ced74485f429ab8cd9d237642da25 674e1432520849bed7aa624fd770410eeb2d8f37 Ali Shokoohi <alishokoohi666@gmail.com> 1551974711 +0330	commit: Token is enough
+674e1432520849bed7aa624fd770410eeb2d8f37 77a402d4bf7431fc2622b02e76c89e516ab2d1ac Ali Shokoohi <alishokoohi666@gmail.com> 1551974797 +0330	commit: Use api token
+77a402d4bf7431fc2622b02e76c89e516ab2d1ac 4ec4ad1d8c962629c46a8e3ebfa05fd196340918 Ali Shokoohi <alishokoohi666@gmail.com> 1552127364 +0330	commit: Token was not needed
+4ec4ad1d8c962629c46a8e3ebfa05fd196340918 2a82494b3ad738bb1eba0650c4f29b5d4fda6f31 Ali Shokoohi <alishokoohi666@gmail.com> 1552127587 +0330	commit: Just use get method in objects
+2a82494b3ad738bb1eba0650c4f29b5d4fda6f31 c0a853af4968fcb9fb38fc4a0a63d1172940ddac Ali Shokoohi <alishokoohi666@gmail.com> 1552335755 +0330	commit: web.User as auth user
+c0a853af4968fcb9fb38fc4a0a63d1172940ddac 46f5f0f7ca04ffb9d10dd54182eae54bbb92bf3d Ali Shokoohi <alishokoohi666@gmail.com> 1552335833 +0330	commit: Add web.models.User as admin register
+46f5f0f7ca04ffb9d10dd54182eae54bbb92bf3d f4e25f07f47ca2c42ea6ee21d4e871e2777c3d70 Ali Shokoohi <alishokoohi666@gmail.com> 1552335935 +0330	commit: Use web.models.User for login
+f4e25f07f47ca2c42ea6ee21d4e871e2777c3d70 2abe2dbee844c2838bcd25b21efdd4bf8ec0b3a8 Ali Shokoohi <alishokoohi666@gmail.com> 1552336094 +0330	commit: Create OneToOneField to web.models.User as user field
+2abe2dbee844c2838bcd25b21efdd4bf8ec0b3a8 4862845ab475a92129b211a5da2ee8bcef99c85d Ali Shokoohi <alishokoohi666@gmail.com> 1552336179 +0330	commit: Use web.models.User for login
+4862845ab475a92129b211a5da2ee8bcef99c85d 8ff364bec1b4b2ee77c1adf1e0d9398e40a2d843 Ali Shokoohi <alishokoohi666@gmail.com> 1552336211 +0330	commit: Update index.html
+8ff364bec1b4b2ee77c1adf1e0d9398e40a2d843 fec8a07252e9be74a5ec19877afefa7d89e5384d Ali Shokoohi <alishokoohi666@gmail.com> 1552336261 +0330	commit: New migrations
+fec8a07252e9be74a5ec19877afefa7d89e5384d 13c0d77f34f40245c82cf46887cfebfb699d2c58 Ali Shokoohi <alishokoohi666@gmail.com> 1552336411 +0330	commit: Delete old migrations
+13c0d77f34f40245c82cf46887cfebfb699d2c58 066fb35a007dbcaf7a02fde7e8874c608b3f0a2a Ali Shokoohi <alishokoohi666@gmail.com> 1552336489 +0330	commit: Create requirements.txt file
+066fb35a007dbcaf7a02fde7e8874c608b3f0a2a 224ce7c59bf2a9f2e72bd056e14e6f60314cdade Ali Shokoohi <alishokoohi666@gmail.com> 1552336766 +0330	commit: Read SECRET_KEY from secrets.py
+224ce7c59bf2a9f2e72bd056e14e6f60314cdade 0986c73edf9f61d4a1709aa6ec9638ee3afc60c6 Ali Shokoohi <alishokoohi666@gmail.com> 1552336802 +0330	commit: Ignore secrets files
+0986c73edf9f61d4a1709aa6ec9638ee3afc60c6 0d74ffb52893f6f7ddc539bb36f44ca0f5e60a41 Ali Shokoohi <alishokoohi666@gmail.com> 1552336895 +0330	commit: Read SECRET_KEY from secrets.py FIXED!
+0d74ffb52893f6f7ddc539bb36f44ca0f5e60a41 1269ad1b2390074e76f1e942335f450be6721e23 Ali Shokoohi <alishokoohi666@gmail.com> 1552483812 +0330	commit: Create projects model
+1269ad1b2390074e76f1e942335f450be6721e23 fb8632ce972bd03e9b8c685ee3e48435ea2af102 Ali Shokoohi <alishokoohi666@gmail.com> 1552484656 +0330	commit: Create plans model
+fb8632ce972bd03e9b8c685ee3e48435ea2af102 bb05aadddf0aa959aa2b1de35d4b22803070c8ce Ali Shokoohi <alishokoohi666@gmail.com> 1552485780 +0330	commit: Fix bugs in new models
+bb05aadddf0aa959aa2b1de35d4b22803070c8ce 314aa1f77ee78ab14d6bcec08018709fe377a39c Ali Shokoohi <alishokoohi666@gmail.com> 1552487306 +0330	commit: Change comment model to comment of web model
+314aa1f77ee78ab14d6bcec08018709fe377a39c 00bc5fc85df6a9afaf03efa2a17c41aec644e426 Ali Shokoohi <alishokoohi666@gmail.com> 1552487729 +0330	commit: Create comments model
+00bc5fc85df6a9afaf03efa2a17c41aec644e426 0232a2e2b901430ec3f862a82ab210ee6a5f63af Ali Shokoohi <alishokoohi666@gmail.com> 1552488345 +0330	commit: Create likes model
+0232a2e2b901430ec3f862a82ab210ee6a5f63af 0fadcf3f4a00cfb8bb548ba3d195f281f6c7b25b Ali Shokoohi <alishokoohi666@gmail.com> 1552668651 +0330	commit: Naje commentofweb change
+0fadcf3f4a00cfb8bb548ba3d195f281f6c7b25b 09ef3780c5ec1b413946e88d924aa4b1687c23c3 Ali Shokoohi <alishokoohi666@gmail.com> 1552668698 +0330	commit: 0002 migrate
+09ef3780c5ec1b413946e88d924aa4b1687c23c3 07076c9829cbe401a3088fdbf0ca77fc838b9854 Ali Shokoohi <alishokoohi666@gmail.com> 1552668936 +0330	commit: Change timezone to Asia/Tehran
+07076c9829cbe401a3088fdbf0ca77fc838b9854 48b23633601ba2bba644e0bd378c3086926a87c7 Ali Shokoohi <alishokoohi666@gmail.com> 1552669759 +0330	commit: Send projects at api/ response
+48b23633601ba2bba644e0bd378c3086926a87c7 17b1368e87700d9efc0aaa44df1b642565b223d3 Ali Shokoohi <alishokoohi666@gmail.com> 1552669850 +0330	commit: Use FroginKey instead OneToOne
+17b1368e87700d9efc0aaa44df1b642565b223d3 5ee6a30058c754198a2db83852591d7a0937a074 Ali Shokoohi <alishokoohi666@gmail.com> 1552670373 +0330	commit: 0003 migrate
+5ee6a30058c754198a2db83852591d7a0937a074 f2e4ac66d08ea0999853b5052cc55f02ddabf201 Ali Shokoohi <alishokoohi666@gmail.com> 1552670844 +0330	commit: Add projects id to response dict
+f2e4ac66d08ea0999853b5052cc55f02ddabf201 c27182079a7f82c02c48f798d991f7a25a89379b Ali Shokoohi <alishokoohi666@gmail.com> 1552922725 +0330	commit: Use any base.html for one sector
+c27182079a7f82c02c48f798d991f7a25a89379b c88c045015543125009cd0ec83c0c0e9385e5d3c Ali Shokoohi <alishokoohi666@gmail.com> 1554029384 +0430	commit: Update requirements.txt
+c88c045015543125009cd0ec83c0c0e9385e5d3c 9d051aa2ed677b57ebd31a402bfe831ed30f39e2 Ali Shokoohi <alishokoohi666@gmail.com> 1554891402 +0430	commit: Add dashdord pages & modify views and urls
+9d051aa2ed677b57ebd31a402bfe831ed30f39e2 20237c5a08c272ccc606f1c11372e6f735bfd49a Ali Shokoohi <alishokoohi666@gmail.com> 1554892047 +0430	commit: New login page overwrite
+20237c5a08c272ccc606f1c11372e6f735bfd49a f9656cc794e66c33cf4b8f882c1233b746316398 Ali Shokoohi <alishokoohi666@gmail.com> 1554894197 +0430	pull origin master --allow-unrelated-histories: Merge made by the 'recursive' strategy.
+f9656cc794e66c33cf4b8f882c1233b746316398 27baa21766c3e97e2ef215945d1c95b9360ee8ec Ali Shokoohi <alishokoohi666@gmail.com> 1554918976 +0430	commit: Define required attribute to fields
+27baa21766c3e97e2ef215945d1c95b9360ee8ec 03eed3f24bf31808b2236b7c970d06cecac9bf17 Ali Shokoohi <alishokoohi666@gmail.com> 1555059788 +0430	commit: Update index base file
+03eed3f24bf31808b2236b7c970d06cecac9bf17 163aa4065a733e978730575f275d47846cdf7250 Ali Shokoohi <alishokoohi666@gmail.com> 1555164300 +0430	commit: Fix login rediretion
+163aa4065a733e978730575f275d47846cdf7250 409b6c1ce990167f845a8f82a9a19eb271c373b1 Ali Shokoohi <alishokoohi666@gmail.com> 1555495034 +0430	commit: Update mail icon
+409b6c1ce990167f845a8f82a9a19eb271c373b1 9ed098250c60fff64ea44f1cbd392c2eb112bfcf Ali Shokoohi <alishokoohi666@gmail.com> 1555782413 +0430	commit: Update .gitignore
+9ed098250c60fff64ea44f1cbd392c2eb112bfcf 17cdabd11a32457a2daf1628c03bf3d4c4bd02d3 Ali Shokoohi <alishokoohi666@gmail.com> 1555783328 +0430	commit: Add user profile view page
+17cdabd11a32457a2daf1628c03bf3d4c4bd02d3 008da8551b6ada8f4d8969efc7b13aeeb33be16c Ali Shokoohi <alishokoohi666@gmail.com> 1555783721 +0430	commit: Add update user content page
+008da8551b6ada8f4d8969efc7b13aeeb33be16c d3dcff5cf10037042e229126c51f0ffdf8b90dbe Ali Shokoohi <alishokoohi666@gmail.com> 1556527938 +0430	commit: Show plans of project at api/plans/
+d3dcff5cf10037042e229126c51f0ffdf8b90dbe 42997502c079383e3bcd9b1bcd377d548588b5d0 Ali Shokoohi <alishokoohi666@gmail.com> 1556528395 +0430	commit: Separation projects of index.
+42997502c079383e3bcd9b1bcd377d548588b5d0 fe03b1c80fd883d4d33333e7d4f0b8cf7442a64c Ali Shokoohi <alishokoohi666@gmail.com> 1556600562 +0430	commit: Add projects serializer
+fe03b1c80fd883d4d33333e7d4f0b8cf7442a64c 261bce691fe6193ea4a1220415dc45579de30903 Ali Shokoohi <alishokoohi666@gmail.com> 1556602565 +0430	commit: Add plans serializer
+261bce691fe6193ea4a1220415dc45579de30903 864c2ee9a347995dfdb097f84c9e5a9563f3673a Ali Shokoohi <alishokoohi666@gmail.com> 1556603700 +0430	commit: Use class-base view instead decorators as possible as&Use serializers
+864c2ee9a347995dfdb097f84c9e5a9563f3673a 8a7be968831911252efc909c1128a4673543a84d Ali Shokoohi <alishokoohi666@gmail.com> 1556747533 +0430	commit: Add Token&User&Employees serializers
+8a7be968831911252efc909c1128a4673543a84d 29ad2e3937581316ebc3cfa092a847a75f9cef4c Ali Shokoohi <alishokoohi666@gmail.com> 1556747581 +0430	commit: User serializers for login APIView
+29ad2e3937581316ebc3cfa092a847a75f9cef4c 7d7f30524892b1fc6747f1b24ecd0faf8345e55f Ali Shokoohi <alishokoohi666@gmail.com> 1556807702 +0430	commit: Add projects information to dashbord template
+7d7f30524892b1fc6747f1b24ecd0faf8345e55f 4e8727daceea1544da0b5d5d03d6b8fe0d4c2986 Ali Shokoohi <alishokoohi666@gmail.com> 1556808066 +0430	commit: Add new projects fields
+4e8727daceea1544da0b5d5d03d6b8fe0d4c2986 b0ec039ff7aec2d0f2772853e6ad0a4fd60be10e Ali Shokoohi <alishokoohi666@gmail.com> 1556808725 +0430	commit: Add projects new fields to dashbord
+b0ec039ff7aec2d0f2772853e6ad0a4fd60be10e ec896603bce1cea963f57e902cfee5f7ef637a72 Ali Shokoohi <alishokoohi666@gmail.com> 1556830326 +0430	commit: Create private serializer for secret
+ec896603bce1cea963f57e902cfee5f7ef637a72 8af0fd8265a96aa019530f45f8572d240cb71a36 Ali Shokoohi <alishokoohi666@gmail.com> 1556833154 +0430	commit: Fix dir possion
+8af0fd8265a96aa019530f45f8572d240cb71a36 f4f815345275b765e540777c24a3169ed3904497 Ali Shokoohi <alishokoohi666@gmail.com> 1556869155 +0430	commit: Add Start&End time of projects

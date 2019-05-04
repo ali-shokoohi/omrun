@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'index/base.html' %}
 {% load static %}
 
 <!-- Page title -->
@@ -67,10 +67,10 @@
 			<div class="row">
 				<div class="col-md-12 tabulation animate-box">
 					<ul class="nav nav-tabs">
-						<li><a data-toggle="tab" href="#general"><i class="flaticon-architect-with-helmet"></i> ساخت مکان های عمومی</a></li>
-						<li><a data-toggle="tab" href="#manage"><i class="flaticon-engineer"></i> مدیریت ساخت و ساز</a></li>
-						<li><a data-toggle="tab" href="#modeling"><i class="flaticon-skyline"></i> ساخت مدل ها</a></li>
 						<li class="active"><a data-toggle="tab" href="#plan"><i class="flaticon-sketch"></i> نقشه کشی &amp; طراحی</a></li>
+						<li><a data-toggle="tab" href="#modeling"><i class="flaticon-skyline"></i> ساخت مدل ها</a></li>
+						<li><a data-toggle="tab" href="#manage"><i class="flaticon-engineer"></i> مدیریت ساخت و ساز</a></li>
+						<li><a data-toggle="tab" href="#general"><i class="flaticon-architect-with-helmet"></i> ساخت مکان های عمومی</a></li>
 					</ul>
 					<div class="tab-content">
 						<div id="plan" class="tab-pane fade in active">
@@ -276,7 +276,7 @@
 						<a href="project.html" class="project-img text-center" style="background-image: url({% static 'web/images/building-1.jpg' %});">
 							<span class="icon"><i class="icon-search2"></i></span>
 						</a>
-						<div class="desc">
+						<div class="text-right desc">
 							<h3><a href="project.html">طراحی داخلی آپارتمان</a></h3>
 						</div>
 					</div>
@@ -286,7 +286,7 @@
 						<a href="project.html" class="project-img text-center" style="background-image: url({% static 'web/images/building-2.jpg' %});">
 							<span class="icon"><i class="icon-search2"></i></span>
 						</a>
-						<div class="desc">
+						<div class="text-right desc">
 							<h3><a href="project.html">محیط شرکت</a></h3>
 						</div>
 					</div>
@@ -296,7 +296,7 @@
 						<a href="project.html" class="project-img text-center" style="background-image: url({% static 'web/images/building-3.jpg' %});">
 							<span class="icon"><i class="icon-search2"></i></span>
 						</a>
-						<div class="desc">
+						<div class="text-right desc">
 							<h3><a href="project.html">ساختمان های مسکونی</a></h3>
 						</div>
 					</div>
@@ -306,7 +306,7 @@
 						<a href="project.html" class="project-img text-center" style="background-image: url({% static 'web/images/building-4.jpg' %});">
 							<span class="icon"><i class="icon-search2"></i></span>
 						</a>
-						<div class="desc">
+						<div class="text-right desc">
 							<h3><a href="project.html">طراحی داخلی آشپزخانه</a></h3>
 						</div>
 					</div>
@@ -316,7 +316,7 @@
 						<a href="project.html" class="project-img text-center" style="background-image: url({% static 'web/images/building-5.jpg' %});">
 							<span class="icon"><i class="icon-search2"></i></span>
 						</a>
-						<div class="desc">
+						<div class="text-right desc">
 							<h3><a href="project.html">مجتمع تجاری</a></h3>
 						</div>
 					</div>
@@ -326,7 +326,7 @@
 						<a href="project.html" class="project-img text-center" style="background-image: url({% static 'web/images/building-6.jpg' %});">
 							<span class="icon"><i class="icon-search2"></i></span>
 						</a>
-						<div class="desc">
+						<div class="text-right desc">
 							<h3><a href="project.html">ساخت هتل ها</a></h3>
 						</div>
 					</div>
