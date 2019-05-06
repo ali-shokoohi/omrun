@@ -42,7 +42,7 @@ class projects(APIView):
         try:
             return Projects.objects.get(pk=pk)
         except Projects.DoesNotExist:
-            return Http404
+            raise Http404
     def post(self, request, format=None):
         all_projects = Projects.objects.all()
         serializer = Projects_Serializers(all_projects, many=True)
@@ -50,7 +50,20 @@ class projects(APIView):
             "status": "ok",
             "projects": serializer.data
         })
-    def delete(self, request, format=None):
+    def put(self, request, pk, format=None):
+        project = self.get_object(pk)
+        serializer = Projects_Serializers(project, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=200, data={
+                "status": "ok",
+                "project": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+    def delete(self, request, pk, format=None):
         project = self.get_object(pk)
         project.delete()
 
