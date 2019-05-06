@@ -38,6 +38,11 @@ class login(APIView):
 
 #View of api/projects/ url
 class projects(APIView):
+    def get_object(self, pk):
+        try:
+            return Projects.objects.get(pk=pk)
+        except Projects.DoesNotExist:
+            return Http404
     def post(self, request, format=None):
         all_projects = Projects.objects.all()
         serializer = Projects_Serializers(all_projects, many=True)
@@ -45,15 +50,18 @@ class projects(APIView):
             "status": "ok",
             "projects": serializer.data
         })
+    def delete(self, request, format=None):
+        project = self.get_object(pk)
+        project.delete()
 
 #View of api/plans/ url
 class plans(APIView):
     def get_object(self, pk):
         try:
-            return Projects.objects.get(pk=pk)
-        except Projects.DoesNotExist:
+            return Plans.objects.get(pk=pk)
+        except Plans.DoesNotExist:
             raise Http404
     def post(self, request, pk, format=None):
         project = self.get_object(pk)
         serializer = PLans_Serializers(project)
-        return Response(status=200, data=serializer)
+        return Response(status=200, data=serializer.data)
