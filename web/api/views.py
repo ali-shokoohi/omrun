@@ -35,17 +35,39 @@ class login(APIView):
             "information":serializer.data
         }
         return Response(status=200, data=result)
-
 #View of api/projects/ url
-class projects(APIView):
+class projects_list(APIView):
+    def get(self, request, format=None):
+        all_projects = Projects.objects.all()
+        serializer = Projects_Serializers(all_projects, many=True)
+        return Response(status=200, data={
+            "status": "ok",
+            "projects": serializer.data
+        })
+    def post(self, request, format=None):
+        data = request.data
+        serializer = Projects_Serializers(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201, data={
+                "status": "ok",
+                "project": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+
+#View of api/projects/<int:pk>/ url
+class projects_detial(APIView):
     def get_object(self, pk):
         try:
             return Projects.objects.get(pk=pk)
         except Projects.DoesNotExist:
             raise Http404
-    def post(self, request, format=None):
-        all_projects = Projects.objects.all()
-        serializer = Projects_Serializers(all_projects, many=True)
+    def get(self, request, pk, format=None):
+        project = self.get_object(pk)
+        serializer = Projects_Serializers(project)
         return Response(status=200, data={
             "status": "ok",
             "projects": serializer.data
