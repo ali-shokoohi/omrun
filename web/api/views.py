@@ -88,6 +88,10 @@ class projects_detial(APIView):
     def delete(self, request, pk, format=None):
         project = self.get_object(pk)
         project.delete()
+        return Response(status=201, data={
+            "status": "ok",
+            "message": "Deleted"
+        })
 
 #View of api/plans/ url
 class plans(APIView):
