@@ -86,10 +86,30 @@ class Projects_Serializers(serializers.ModelSerializer):
         return instance
 
 
-class PLans_Serializers(serializers.ModelSerializer):
+class Plans_Serializers(serializers.ModelSerializer):
     class Meta:
         model = Plans
-        fields = ("photo", "data", "kind")
+        fields = ("id", "photo", "data", "kind", "project")
+
+    def create(self, validated_data):
+        project_id = validated_data.pop("project")
+        project = Projects.objects.get(id=project_id)
+        plan = Plans.objects.create(project=project, **validated_data)
+        return plan
+    
+    def update(self, instance, validated_data):
+        project_id = validated_data.pop("project")
+
+        project = instance.project
+
+        instance.id = validated_data.get('id', instance.id)
+        instance.photo = validated_data.get('photo', instance.photo)
+        instance.date = validated_data.get('date', instance.date)
+        instance.kind = validated_data.get('kind', instance.kind)
+        instance.save()
+
+        return instance
+
 
 #Serializer of Purchases model
 class Purchases_serializers(serializers.ModelSerializer):

@@ -6,7 +6,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from web.models import User, Employees, Clients, Projects, Plans
-from web.api.serializers import Projects_Serializers, PLans_Serializers, Employees_Serializers
+from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers
 from django.contrib.auth.hashers import check_password
 from django.http import Http404
 import json
@@ -94,13 +94,67 @@ class projects_detial(APIView):
         })
 
 #View of api/plans/ url
-class plans(APIView):
+class plans_list(APIView):
+    def get_project(self):
+        try:
+            return self.request.GET["project"]
+        except:
+            raise Http404
+    def get_object(self, p_id):
+        try:
+            project = Projects.objects.get(id=p_id)
+            return Plans.objects.filter(project=project)
+        except Plans.DoesNotExist:
+            raise Http404
+        except Projects.DoesNotExist:
+            raise Http404
+    def get(self, request, format=None):
+        project_id = self.get_project()
+        the_plans = self.get_object(project_id)
+        serializer = Plans_Serializers(the_plans, many=True)
+        return Response(status=200, data=serializer.data)
+    def post(self, request, format=None):
+        data = request.data
+        serializer = Plans_Serializers(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201, data={
+                "status": "ok",
+                "project": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+
+#View of api/plans/<int:pk>/ url
+class plans_detail(APIView):
     def get_object(self, pk):
         try:
             return Plans.objects.get(pk=pk)
         except Plans.DoesNotExist:
             raise Http404
-    def post(self, request, pk, format=None):
-        project = self.get_object(pk)
-        serializer = PLans_Serializers(project)
+    def get(self, request, pk, format=None):
+        plan = self.get_object(pk)
+        serializer = Plans_Serializers(plan)
         return Response(status=200, data=serializer.data)
+    def put(self, request, pk, format=None):
+        plan = self.get_object(pk)
+        serializer = Plans_Serializers(plan, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=200, data={
+                "status": "ok",
+                "project": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+    def delete(self, request, pk, format=None):
+        plan = self.get_object(pk)
+        plan.delete()
+        return Response(status=201, data={
+            "status": "ok",
+            "message": "Deleted"
+        })
