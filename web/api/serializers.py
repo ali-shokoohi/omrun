@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from web.models import Purchases, Comments, Projects, Plans, User, Employees, Geographical, Clients
+from web.models import Purchases, Comments, Projects, Plans, ToDo
+from web.models import User, Employees, Geographical, Clients, Tasks
 from rest_framework.authtoken.models import Token
 
 #Serializer of Token model
@@ -24,7 +25,7 @@ class User_Serializers_Public(serializers.ModelSerializer):
 
 #Serializer of Employees
 class Employees_Serializers(serializers.ModelSerializer):
-    user = User_Serializers_Public(required=True)
+    user = User_Serializers_Public(required=False)
 
     class Meta:
         model = Employees
@@ -32,7 +33,7 @@ class Employees_Serializers(serializers.ModelSerializer):
 
 #Serializer of Clients
 class Clients_Serializers(serializers.ModelSerializer):
-    user = User_Serializers_Public(required=True)
+    user = User_Serializers_Public(required=False)
 
     class Meta:
         model = Clients
@@ -46,9 +47,9 @@ class Geographical_Serializer(serializers.ModelSerializer):
 
 #Serializer of Purchases model
 class Projects_Serializers(serializers.ModelSerializer):
-    employer = Employees_Serializers(required=True)
-    client = Clients_Serializers(required=True)
-    geographical = Geographical_Serializer(required=True)
+    employer = Employees_Serializers(required=False)
+    client = Clients_Serializers(required=False)
+    geographical = Geographical_Serializer(required=False)
 
     class Meta:
         model = Projects
@@ -68,15 +69,17 @@ class Projects_Serializers(serializers.ModelSerializer):
         return project
     
     def update(self, instance, validated_data):
-        empolyer_data = validated_data.pop("employer")
-        client_data = validated_data.pop("client")
-        geographical_data = validated_data.pop("geographical")
+        try:
+            empolyer_data = validated_data.pop("employer")
+            client_data = validated_data.pop("client")
+            geographical_data = validated_data.pop("geographical")
 
-        empolyer = instance.employer
-        client = instance.client
-        geographical = instance.geographical
-
-        instance.id = validated_data.get('id', instance.id)
+            empolyer = instance.employer
+            client = instance.client
+            geographical = instance.geographical
+        except:
+            pass
+#        instance.id = validated_data.get('id', instance.id)
         instance.name = validated_data.get('name', instance.name)
         instance.start_date = validated_data.get('start_date', instance.start_date)
         instance.price = validated_data.get('price', instance.price)
@@ -85,6 +88,52 @@ class Projects_Serializers(serializers.ModelSerializer):
 
         return instance
 
+class Tasks_Serializers(serializers.ModelSerializer):
+    class Meta:
+        model = Tasks
+        fields = "__all__"
+    
+    def create(self, validated_data):
+        project = validated_data.pop("project")
+#        project_id = validated_data.pop("project")
+#        project = Projects.objects.get(id=project_id)
+        task = Tasks.objects.create(project=project, **validated_data)
+        return task
+    
+    def update(self, instance, validated_data):
+        project_id = validated_data.pop("project")
+
+        project = instance.project
+
+        instance.id = validated_data.get('id', instance.id)
+        instance.subject = validated_data.get('subject', instance.id)
+        instance.save()
+
+        return instance
+
+class ToDo_serializers(serializers.ModelSerializer):
+    class Meta:
+        model = ToDo
+        fields = "__all__"
+
+    def create(self, validated_data):
+#        task_id = validated_data.pop("task")
+        task = validated_data.pop("task")
+#        task = Tasks.objects.get(id=task_id)
+        todo = ToDo.objects.create(task=task, **validated_data)
+
+        return todo
+    def update(self, instance, validated_data):
+        task_id = validated_data.pop("task")
+
+        task = instance.task
+
+        instance.id = validated_data.get('id', instance.id)
+        instance.id = validated_data.get('details', instance.id)
+        instance.id = validated_data.get('done', instance.id)
+        instance.save()
+
+        return instance
 
 class Plans_Serializers(serializers.ModelSerializer):
     class Meta:
