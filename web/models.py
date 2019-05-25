@@ -68,6 +68,21 @@ class Plans(models.Model):
     def __str__(self):
         return self.project.name
 
+class Tasks(models.Model):
+    project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+    subject = models.TextField()
+    def __str__(self):
+        return self.subject
+
+class ToDo(models.Model):
+    task = models.ForeignKey(Tasks, on_delete=models.CASCADE)
+    details = models.TextField()
+    done = models.BooleanField()
+
+    def __str__(self):
+        return self.details
+
+
 class Photos(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     image = models.ImageField()
