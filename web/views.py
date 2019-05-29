@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import User, Employees, CommentsOfWeb, Projects
+from web.models import User, Employees, CommentsOfWeb, Projects
+from web.forms import UserForm, EmployeesForm
 from hashlib import md5
 from django.contrib.auth.hashers import check_password
 #/=========================================================
@@ -102,7 +103,7 @@ def logout(request):
     return HttpResponseRedirect(redirect_to="/login/")
 
 #View of user/profile/
-def profile(request):
+def profile_show(request):
     #Check old sessions
     if request.session.has_key('user_id'):
         username = request.session.get('user_id')
@@ -119,17 +120,32 @@ def profile(request):
         return HttpResponseRedirect(redirect_to="/login/")
 
 #View of user/update/
-def update(request):
+def profile_update(request):
     #Check old sessions
     if request.session.has_key('user_id'):
         username = request.session.get('user_id')
         user = User.objects.get(username=username)#TODO: maybe user-id is fake!
         #Get empoyee via user
         employee = Employees.objects.get(user=user)
-        context = {
-            "user": employee,
-            #...
-        }
+        context = dict()
+        context["user"] = employee
+        if request.method == "GET":
+            pass
+        elif request.method == "POST":
+            data = request.POST
+            user_form = UserForm(instance=user, data=data)
+            if user_form.is_valid():
+                user_form.save()
+                employer_form = EmployeesForm(instance=employee, data=data)
+                if employer_form.is_valid():
+                    employer_form.save()
+                    context["message"] = "پرفایل شما با موفقیت بروزرسانی شد!"
+                else:
+                    #context["error"] = "اطلاعات وارد شده صحیح نمیباشد"
+                    context["error"] = employer_form.errors
+            else:
+                #context["error"] = "اطلاعات وارد شده صحیح نمیباشد"
+                context["error"] = UserForm.errors
         return render(request=request, template_name="profile/update.html", context=context)
     else:
         #If not session is here redirect to login/ url

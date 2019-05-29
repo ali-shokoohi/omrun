@@ -9,8 +9,8 @@ dashbordpatterns = [
 ]
 
 userpatterns = [
-    path('profile/', views.profile, name="profile"),
-    path('update/', views.update, name="update"),
+    path('profile/', views.profile_show, name="profile"),
+    path('update/', views.profile_update, name="update"),
 ]
 
 urlpatterns = [
