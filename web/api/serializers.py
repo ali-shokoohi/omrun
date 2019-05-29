@@ -17,6 +17,11 @@ class User_Serializers_Private(serializers.ModelSerializer):
         fields = ("first_name", "last_name", "username", "email")
         #TODO: Add token field also ...
 
+class User_Serializers(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("__all__")
+
 #Public serializer of User model
 class User_Serializers_Public(serializers.ModelSerializer):
     class Meta:
@@ -30,6 +35,13 @@ class Employees_Serializers(serializers.ModelSerializer):
     class Meta:
         model = Employees
         fields = ("user", "post", "profile_pic")
+    
+    def create(self, validated_data):
+        user = validated_data.pop("user")
+        employer = Employees.objects.create(user=user, **validated_data)
+
+        return employer
+
 
 #Serializer of Clients
 class Clients_Serializers(serializers.ModelSerializer):
