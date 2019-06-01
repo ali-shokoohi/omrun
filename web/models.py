@@ -95,7 +95,7 @@ class Comments(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ForeignKey(Photos, on_delete=models.CASCADE)
     text = models.TextField(null=False)
-    date = models.DateField()
+    date = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.author.first_name
@@ -104,7 +104,7 @@ class Likes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ForeignKey(Photos, on_delete=models.CASCADE)
     Numbers = models.IntegerField()
-    date = models.DateField()
+    date = models.DateField(auto_now=True)
 
     def __str__(self):
-        return self.author.first_name
+        return self.user.first_name
