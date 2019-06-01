@@ -86,6 +86,7 @@ class ToDo(models.Model):
 class Photos(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     image = models.ImageField()
+    caption = models.TextField()
 
     def __str__(self):
         return self.project.name
