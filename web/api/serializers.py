@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from web.models import Purchases, Comments, Projects, Plans, ToDo
-from web.models import User, Employees, Geographical, Clients, Tasks
+from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos
+from web.models import User, Employees, Geographical, Clients, Tasks, Likes
 from rest_framework.authtoken.models import Token
 
 #Serializer of Token model
@@ -178,8 +178,19 @@ class Purchases_serializers(serializers.ModelSerializer):
         model = Purchases
         fields = ("buyer", "amount", "for_what", "date")
 
-#Serializer of Purchases model
-class Comments_serializers(serializers.ModelSerializer):
+#Serializer of Comments model
+class Comments_Serializers(serializers.ModelSerializer):
     class Meta:
         model = Comments
-        fields = ("author", "text", "date")
+        fields = "__all__"
+
+#Serializers of Photos
+class Photos_Serializers(serializers.ModelSerializer):
+    class Meta:
+        model = Photos
+        fields = "__all__"
+
+class Likes_Serializers(serializers.ModelSerializer):
+    class Meta:
+        model = Likes
+        fields = "__all__"
