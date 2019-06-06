@@ -1,26 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth import authenticate, login, logout
 from web.models import User, Employees, CommentsOfWeb, Projects
 from web.forms import UserForm, EmployeesForm
 from hashlib import md5
 from django.contrib.auth.hashers import check_password
 #/=========================================================
 
-#Check authentication of login request
-def logging(username, password):
-    try:
-        user_check = User.objects.filter(username=username).exists()
-        if user_check is True:
-            user = User.objects.get(username=username)
-            pass_check = check_password(password, user.password)
-            if pass_check is True:
-                return True
-            else:
-                return False
-        else:
-            return False
-    except:
-        return False
+#Some needed function here!
 
 #============================Views===========================
 
@@ -28,7 +15,7 @@ def logging(username, password):
 def index(request):
     employees = Employees.objects.all()#Get all employees
     comments = CommentsOfWeb.objects.all()#Get all comments
-    if request.session.has_key('user_id'):
+    if request.user.is_authenticated:
         has_login = True
     else:
         has_login = False
@@ -41,9 +28,9 @@ def index(request):
     return render(request=request, template_name="index/index.html", context=context)
 
 #View of login/ path url
-def login(request):
+def loginPage(request):
     #Check old sessions
-    if request.session.has_key('user_id'):
+    if request.user.is_authenticated:
         return HttpResponseRedirect(redirect_to="/dashbord/")
     else:
         #Checking new received datas
@@ -52,9 +39,11 @@ def login(request):
                 username = request.POST['username']
                 password = request.POST['password']
                 #Check authentication of login
-                if logging(username, password) is True:
+                user = authenticate(request, username=username, password=password)
+                if user is not None:
                     #Set new session and redirect to dashboard/ url
-                    request.session['user_id'] = username
+                    #request.session['user_id'] = username
+                    login(request, user)
                     return HttpResponseRedirect(redirect_to="/dashbord/")
                 else:
                     error = "!نام کاربری یا کلمه عبود اشتباه میباشد"
@@ -77,11 +66,8 @@ def login(request):
 #View of dashbord/ path url
 def dashbord(request):
     #Check old sessions
-    if request.session.has_key('user_id'):
-        username = request.session.get('user_id')
-        print("User id is:", type(username), username)
-        #Get user by username (user-id)
-        user = User.objects.get(username=username)#TODO: maybe user-id is fake!
+    if request.user.is_authenticated:
+        user = request.user
         #Get empoyee via user
         employee = Employees.objects.get(user=user)
         projects = Projects.objects.all()
@@ -96,18 +82,14 @@ def dashbord(request):
         return HttpResponseRedirect(redirect_to="/login/")
         
 #Action of logout/ path url
-def logout(request):
-    #Check old sessions
-    if request.session.has_key('user_id'):
-        del request.session['user_id']
+def logoutPage(request):
+    logout(request)
     return HttpResponseRedirect(redirect_to="/login/")
 
 #View of user/profile/
 def profile_show(request):
-    #Check old sessions
-    if request.session.has_key('user_id'):
-        username = request.session.get('user_id')
-        user = User.objects.get(username=username)#TODO: maybe user-id is fake!
+    if request.user.is_authenticated:
+        user = request.user
         #Get empoyee via user
         employee = Employees.objects.get(user=user)
         context = {
@@ -121,10 +103,8 @@ def profile_show(request):
 
 #View of user/update/
 def profile_update(request):
-    #Check old sessions
-    if request.session.has_key('user_id'):
-        username = request.session.get('user_id')
-        user = User.objects.get(username=username)#TODO: maybe user-id is fake!
+    if request.user.is_authenticated:
+        user = request.user
         #Get empoyee via user
         employee = Employees.objects.get(user=user)
         context = dict()
@@ -141,11 +121,11 @@ def profile_update(request):
                     employer_form.save()
                     context["message"] = "پرفایل شما با موفقیت بروزرسانی شد!"
                 else:
-                    #context["error"] = "اطلاعات وارد شده صحیح نمیباشد"
-                    context["error"] = employer_form.errors
+                    context["error"] = "اطلاعات وارد شده در em صحیح نمیباشد"
+                    #context["error"] = employer_form.errors
             else:
-                #context["error"] = "اطلاعات وارد شده صحیح نمیباشد"
-                context["error"] = UserForm.errors
+                context["error"] = "اطلاعات وارد شده در user صحیح نمیباشد"
+                #context["error"] = UserForm.errors
         return render(request=request, template_name="profile/update.html", context=context)
     else:
         #If not session is here redirect to login/ url
