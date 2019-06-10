@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos
-from web.models import User, Employees, Geographical, Clients, Tasks, Likes
+from web.models import User, Employees, Geographical, Clients, Tasks, Likes, AllowPersons
 from rest_framework.authtoken.models import Token
 
 #Serializer of Token model
@@ -171,6 +171,10 @@ class Plans_Serializers(serializers.ModelSerializer):
 
         return instance
 
+class AllowPersons_Serializers(serializers.ModelSerializer):
+    class Meta:
+        model = AllowPersons
+        fields = ("user")
 
 #Serializer of Purchases model
 class Purchases_serializers(serializers.ModelSerializer):

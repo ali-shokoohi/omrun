@@ -18,7 +18,7 @@ class Purchases(models.Model):
     buyer = models.ForeignKey(Employees, on_delete=models.CASCADE)
     amount = models.BigIntegerField(null=False)
     for_what = models.TextField(null=False)
-    date = models.DateField()
+    date = models.DateTimeField()
 
     def __str__(self):
         return str(self.amount)
@@ -33,7 +33,7 @@ class Clients(models.Model):
 class CommentsOfWeb(models.Model):
     author = models.ForeignKey(Clients, on_delete=models.CASCADE)
     text = models.TextField(null=False)
-    date = models.DateField()
+    date = models.DateTimeField()
 
     def __str__(self):
         return str(self.author)
@@ -68,6 +68,13 @@ class Plans(models.Model):
     def __str__(self):
         return self.project.name
 
+class AllowPersons(models.Model):
+    project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.user)
+
 class Tasks(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     subject = models.TextField()
@@ -95,7 +102,7 @@ class Comments(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ForeignKey(Photos, on_delete=models.CASCADE)
     text = models.TextField(null=False)
-    date = models.DateField(auto_now=True)
+    date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.author.first_name
@@ -103,8 +110,7 @@ class Comments(models.Model):
 class Likes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ForeignKey(Photos, on_delete=models.CASCADE)
-    Numbers = models.IntegerField()
-    date = models.DateField(auto_now=True)
+    date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.user.first_name

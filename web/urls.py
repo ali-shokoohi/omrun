@@ -15,11 +15,12 @@ userpatterns = [
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('login/', views.login, name="login"),
+    path('login/', views.loginPage, name="login"),
     path('dashbord/', include(dashbordpatterns)),
     path('user/', include(userpatterns)),
-    path('logout/', views.logout, name="logout"),
+    path('logout/', views.logoutPage, name="logout"),
     path('api/', include('web.api.urls'))
 ]
 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) 
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

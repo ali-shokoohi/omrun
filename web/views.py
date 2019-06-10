@@ -3,8 +3,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from web.models import User, Employees, CommentsOfWeb, Projects
 from web.forms import UserForm, EmployeesForm
-from hashlib import md5
-from django.contrib.auth.hashers import check_password
 #/=========================================================
 
 #Some needed function here!
