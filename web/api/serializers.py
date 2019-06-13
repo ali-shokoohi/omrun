@@ -148,9 +148,14 @@ class ToDo_serializers(serializers.ModelSerializer):
         return instance
 
 class Plans_Serializers(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField(source='get_image_url')
+
     class Meta:
         model = Plans
-        fields = ("id", "photo", "data", "kind", "project")
+        fields = ("id", "photo", "data", "kind", "project", "image_url")
+    
+    def get_image_url(self, obj):
+        return obj.photo.url
 
     def create(self, validated_data):
         project_id = validated_data.pop("project")
@@ -184,17 +189,49 @@ class Purchases_serializers(serializers.ModelSerializer):
 
 #Serializer of Comments model
 class Comments_Serializers(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField(source='get_image_url')
     class Meta:
         model = Comments
         fields = "__all__"
+    
+    def get_image_url(self, obj):
+        return obj.image.url
 
 #Serializers of Photos
 class Photos_Serializers(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField(source='get_image_url')
+    likes = serializers.SerializerMethodField(source='get_likes')
+    comments = serializers.SerializerMethodField(source='get_comments')
+    likes_count = serializers.SerializerMethodField(source='get_likes_count')
+    comments_count = serializers.SerializerMethodField(source='get_comments_count')
     class Meta:
         model = Photos
         fields = "__all__"
+    
+    def get_image_url(self, obj):
+        return obj.image.url
+    
+    def get_likes(self, obj):
+        likes = Likes.objects.filter(image=obj)
+        count = likes.count()
+        data = Likes_Serializers(likes, many=True).data
+        return data
+    def get_comments(self, obj):
+        comments = Comments.objects.filter(image=obj)
+        count = comments.count()
+        data = Comments_Serializers(comments, many=True).data
+        return data
+
+    def get_likes_count(self, obj):
+        return Likes.objects.filter(image=obj).count()
+    def get_comments_count(self, obj):
+        return Comments.objects.filter(image=obj).count()
 
 class Likes_Serializers(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField(source='get_image_url')
     class Meta:
         model = Likes
         fields = "__all__"
+    
+    def get_image_url(self, obj):
+        return obj.image.url
