@@ -5,8 +5,8 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-from web.models import User, Employees, Clients, Projects, Plans, Tasks, ToDo, Photos, Comments, Likes
-from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers
+from web.models import User, Employees, Clients, Projects, Plans, Tasks, ToDo, Photos, Comments, Likes, AllowPersons
+from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers, AllowPersons_Serializers
 from web.api.serializers import Tasks_Serializers, ToDo_serializers, User_Serializers, Photos_Serializers, Comments_Serializers
 from django.contrib.auth.hashers import check_password
 from rest_framework.parsers import JSONParser, FormParser, FileUploadParser
@@ -210,6 +210,84 @@ class plans_detail(APIView):
         permission_classes = (IsAuthenticated,)
         plan = self.get_object(pk)
         plan.delete()
+        return Response(status=201, data={
+            "status": "ok",
+            "message": "Deleted"
+        })
+
+#View of api/plans/ url
+class Allow_list(APIView):
+    def get_project(self):
+        try:
+            return self.request.GET["project"]
+        except:
+            raise Http404
+    def get_object(self, p_id):
+        try:
+            project = Projects.objects.get(id=p_id)
+            return AllowPersons.objects.filter(project=project)
+        except AllowPersons.DoesNotExist:
+            raise Http404
+        except Projects.DoesNotExist:
+            raise Http404
+    def get(self, request, format=None):
+        project_id = self.get_project()
+        persons = self.get_object(project_id)
+        serializer = AllowPersons_Serializers(persons, many=True)
+        return Response(status=200, data={
+            "status": "ok",
+            "persons": serializer.data
+        })
+    def post(self, request, format=None):
+        authentication_classes = (TokenAuthentication,)
+        permission_classes = (IsAuthenticated,)
+        data = request.data
+        serializer = AllowPersons_Serializers(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201, data={
+                "status": "ok",
+                "person": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+
+#View of api/plans/<int:pk>/ url
+class Allow_detail(APIView):
+    def get_object(self, pk):
+        try:
+            return AllowPersons.objects.get(pk=pk)
+        except AllowPersons.DoesNotExist:
+            raise Http404
+    def get(self, request, pk, format=None):
+        person = self.get_object(pk)
+        serializer = AllowPersons_Serializers(person)
+        return Response(status=200, data={
+            "status": "ok",
+            "persons": serializer.data
+        })
+    def put(self, request, pk, format=None):
+        authentication_classes = (TokenAuthentication,)
+        permission_classes = (IsAuthenticated,)
+        person = self.get_object(pk)
+        serializer = AllowPersons_Serializers(person, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=200, data={
+                "status": "ok",
+                "person": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+    def delete(self, request, pk, format=None):
+        authentication_classes = (TokenAuthentication,)
+        permission_classes = (IsAuthenticated,)
+        person = self.get_object(pk)
+        person.delete()
         return Response(status=201, data={
             "status": "ok",
             "message": "Deleted"

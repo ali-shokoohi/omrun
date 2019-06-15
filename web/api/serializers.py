@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos
+from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos, ToDo
 from web.models import User, Employees, Geographical, Clients, Tasks, Likes, AllowPersons
 from rest_framework.authtoken.models import Token
 
@@ -62,10 +62,11 @@ class Projects_Serializers(serializers.ModelSerializer):
     employer = Employees_Serializers(required=False)
     client = Clients_Serializers(required=False)
     geographical = Geographical_Serializer(required=False)
+    allow = serializers.SerializerMethodField('get_allow_person')
 
     class Meta:
         model = Projects
-        fields = ("id", "name", "start_date", "price", "done", "employer", "geographical", "client")
+        fields = ("id", "name", "start_date", "price", "done", "employer", "geographical", "client", "allow")
     
     def create(self, validated_data):
         user_email = validated_data.pop("employer")["user"]["email"]
@@ -99,8 +100,15 @@ class Projects_Serializers(serializers.ModelSerializer):
         instance.save()
 
         return instance
+    
+    def get_allow_person(self, project):
+        persons = AllowPersons.objects.filter(project=project)
+        data = AllowPersons_Serializers(persons, many=True).data
+        return data
 
 class Tasks_Serializers(serializers.ModelSerializer):
+    todos = serializers.SerializerMethodField('get_todo')
+
     class Meta:
         model = Tasks
         fields = "__all__"
@@ -122,6 +130,11 @@ class Tasks_Serializers(serializers.ModelSerializer):
         instance.save()
 
         return instance
+    
+    def get_todo(self, task):
+        todos =ToDo.objects.filter(task=task)
+        data = ToDo_serializers(todos, many=True).data
+        return data
 
 class ToDo_serializers(serializers.ModelSerializer):
     class Meta:
@@ -179,7 +192,7 @@ class Plans_Serializers(serializers.ModelSerializer):
 class AllowPersons_Serializers(serializers.ModelSerializer):
     class Meta:
         model = AllowPersons
-        fields = ("user")
+        fields = ("id", "user", "project")
 
 #Serializer of Purchases model
 class Purchases_serializers(serializers.ModelSerializer):
