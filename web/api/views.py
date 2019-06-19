@@ -1,15 +1,12 @@
 #rom rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from web.models import User, Employees, Clients, Projects, Plans, Tasks, ToDo, Photos, Comments, Likes, AllowPersons, Gallery, Purchases, Documents
 from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers, AllowPersons_Serializers, Purchases_serializers
 from web.api.serializers import Tasks_Serializers, ToDo_serializers, User_Serializers, Photos_Serializers, Comments_Serializers, Gallery_Serializers, Documents_Serializers
 from django.contrib.auth.hashers import check_password
-from rest_framework.parsers import JSONParser, FormParser, FileUploadParser
 from django.http import Http404
 import json
 #/=========================================================
@@ -27,7 +24,6 @@ class index(APIView):
 #View of api/login/ url
 class login(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
-    permission_classes = (IsAuthenticated,)
     def post(self, request, format=None):
         user = request.user
         employee = Employees.objects.get(user=user)
@@ -82,8 +78,6 @@ class projects_list(APIView):
             "projects": serializer.data
         })
     def post(self, request, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         data = request.data
         serializer = Projects_Serializers(data=data)
         if serializer.is_valid():
@@ -99,7 +93,6 @@ class projects_list(APIView):
 
 #View of api/projects/<int:pk>/ url
 class projects_detial(APIView):
-    parser_classes = [JSONParser, FormParser, FileUploadParser]
     def get_object(self, pk):
         try:
             return Projects.objects.get(pk=pk)
@@ -113,8 +106,6 @@ class projects_detial(APIView):
             "projects": serializer.data
         })
     def put(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         project = self.get_object(pk)
         serializer = Projects_Serializers(project, data=request.data)
         if serializer.is_valid():
@@ -128,8 +119,6 @@ class projects_detial(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         project = self.get_object(pk)
         project.delete()
         return Response(status=201, data={
@@ -161,8 +150,6 @@ class plans_list(APIView):
             "plans": serializer.data
         })
     def post(self, request, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         data = request.data
         serializer = Plans_Serializers(data=data)
         if serializer.is_valid():
@@ -191,8 +178,6 @@ class plans_detail(APIView):
             "plans": serializer.data
         })
     def put(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         plan = self.get_object(pk)
         serializer = Plans_Serializers(plan, data=request.data)
         if serializer.is_valid():
@@ -206,8 +191,6 @@ class plans_detail(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         plan = self.get_object(pk)
         plan.delete()
         return Response(status=201, data={
@@ -239,8 +222,6 @@ class Allow_list(APIView):
             "persons": serializer.data
         })
     def post(self, request, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         data = request.data
         serializer = AllowPersons_Serializers(data=data)
         if serializer.is_valid():
@@ -269,8 +250,6 @@ class Allow_detail(APIView):
             "persons": serializer.data
         })
     def put(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         person = self.get_object(pk)
         serializer = AllowPersons_Serializers(person, data=request.data)
         if serializer.is_valid():
@@ -284,8 +263,6 @@ class Allow_detail(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         person = self.get_object(pk)
         person.delete()
         return Response(status=201, data={
@@ -303,8 +280,6 @@ class Tasks_list(APIView):
             "tasks": serializer.data
         })
     def post(self, request, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         data = request.data
         serializer = Tasks_Serializers(data=data)
         if serializer.is_valid():
@@ -319,7 +294,6 @@ class Tasks_list(APIView):
         })
 #View of api/tasks/<int:pk>/ url
 class Tasks_detial(APIView):
-    parser_classes = [JSONParser, FormParser, FileUploadParser]
     def get_object(self, pk):
         try:
             return Tasks.objects.get(pk=pk)
@@ -333,8 +307,6 @@ class Tasks_detial(APIView):
             "tasks": serializer.data
         })
     def put(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         task = self.get_object(pk)
         serializer = Tasks_Serializers(task, data=request.data)
         if serializer.is_valid():
@@ -379,8 +351,6 @@ class ToDo_list(APIView):
             "todos": serializer.data
         })
     def post(self, request, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         data = request.data
         serializer = ToDo_serializers(data=data)
         if serializer.is_valid():
@@ -409,8 +379,6 @@ class ToDo_detail(APIView):
             "todo": serializer.data
         })
     def put(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         todo = self.get_object(pk)
         serializer = ToDo_serializers(todo, data=request.data)
         if serializer.is_valid():
@@ -424,8 +392,6 @@ class ToDo_detail(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         todo = self.get_object(pk)
         todo.delete()
         return Response(status=201, data={
@@ -443,8 +409,6 @@ class Gallery_list(APIView):
             "gallerys": serializer.data
         })
     def post(self, request, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         data = request.data
         serializer = Gallery_Serializers(data=data)
         if serializer.is_valid():
@@ -460,7 +424,6 @@ class Gallery_list(APIView):
 
 #View of api/gallerys/<int:pk>/ url
 class Gallery_detial(APIView):
-    parser_classes = [JSONParser, FormParser, FileUploadParser]
     def get_object(self, pk):
         try:
             return Gallery.objects.get(pk=pk)
@@ -474,8 +437,6 @@ class Gallery_detial(APIView):
             "Galerry": serializer.data
         })
     def put(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         gallery = self.get_object(pk)
         serializer = Gallery_Serializers(gallery, data=request.data)
         if serializer.is_valid():
@@ -489,8 +450,6 @@ class Gallery_detial(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         gallery = self.get_object(pk)
         gallery.delete()
         return Response(status=201, data={
@@ -508,8 +467,6 @@ class Photos_list(APIView):
             "photos": serializer.data
         })
     def post(self, request, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         data = request.data
         serializer = Photos_Serializers(data=data)
         if serializer.is_valid():
@@ -525,7 +482,6 @@ class Photos_list(APIView):
 
 #View of api/photos/<int:pk>/ url
 class Photos_detial(APIView):
-    parser_classes = [JSONParser, FormParser, FileUploadParser]
     def get_object(self, pk):
         try:
             return Photos.objects.get(pk=pk)
@@ -539,8 +495,6 @@ class Photos_detial(APIView):
             "photos": serializer.data
         })
     def put(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         photo = self.get_object(pk)
         serializer = Photos_Serializers(photo, data=request.data)
         if serializer.is_valid():
@@ -554,8 +508,6 @@ class Photos_detial(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         photo = self.get_object(pk)
         photo.delete()
         return Response(status=201, data={
@@ -587,8 +539,6 @@ class Likes_list(APIView):
             "likes": serializer.data
         })
     def post(self, request, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         data = request.data
         serializer = Likes_Serializers(data=data)
         if serializer.is_valid():
@@ -617,8 +567,6 @@ class Likes_detail(APIView):
             "like": serializer.data
         })
     def put(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         like = self.get_object(pk)
         serializer = Likes_Serializers(like, data=request.data)
         if serializer.is_valid():
@@ -632,8 +580,6 @@ class Likes_detail(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         like = self.get_object(pk)
         like.delete()
         return Response(status=201, data={
@@ -665,8 +611,6 @@ class Comments_list(APIView):
             "comments": serializer.data
         })
     def post(self, request, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         data = request.data
         serializer = Comments_Serializers(data=data)
         if serializer.is_valid():
@@ -695,8 +639,6 @@ class Comments_detail(APIView):
             "comment": serializer.data
         })
     def put(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         comment = self.get_object(pk)
         serializer = Comments_Serializers(comment, data=request.data)
         if serializer.is_valid():
@@ -710,8 +652,6 @@ class Comments_detail(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         comment = self.get_object(pk)
         comment.delete()
         return Response(status=201, data={
@@ -729,8 +669,6 @@ class Purchases_list(APIView):
             "purchases": serializer.data
         })
     def post(self, request, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         data = request.data
         serializer = Purchases_serializers(data=data)
         if serializer.is_valid():
@@ -746,7 +684,6 @@ class Purchases_list(APIView):
 
 #View of api/photos/<int:pk>/ url
 class Purchases_detial(APIView):
-    parser_classes = [JSONParser, FormParser, FileUploadParser]
     def get_object(self, pk):
         try:
             return Purchases.objects.get(pk=pk)
@@ -760,8 +697,6 @@ class Purchases_detial(APIView):
             "purchases": serializer.data
         })
     def put(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         purchase = self.get_object(pk)
         serializer = Purchases_serializers(purchase, data=request.data)
         if serializer.is_valid():
@@ -775,8 +710,6 @@ class Purchases_detial(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         purchase = self.get_object(pk)
         purchase.delete()
         return Response(status=201, data={
@@ -794,8 +727,6 @@ class Documents_list(APIView):
             "documents": serializer.data
         })
     def post(self, request, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         data = request.data
         serializer = Documents_Serializers(data=data)
         if serializer.is_valid():
@@ -811,7 +742,6 @@ class Documents_list(APIView):
 
 #View of api/photos/<int:pk>/ url
 class Documents_detial(APIView):
-    parser_classes = [JSONParser, FormParser, FileUploadParser]
     def get_object(self, pk):
         try:
             return Documents.objects.get(pk=pk)
@@ -825,8 +755,6 @@ class Documents_detial(APIView):
             "documents": serializer.data
         })
     def put(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         document = self.get_object(pk)
         serializer = Documents_Serializers(document, data=request.data)
         if serializer.is_valid():
@@ -840,8 +768,6 @@ class Documents_detial(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
-        authentication_classes = (TokenAuthentication,)
-        permission_classes = (IsAuthenticated,)
         document = self.get_object(pk)
         document.delete()
         return Response(status=201, data={
@@ -857,8 +783,6 @@ def logging(username, password):
     else:
         return Http404
 class Plan_delete(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
     def get_object(self, pk):
         try:
             return Plans.objects.get(pk=pk)
@@ -873,8 +797,6 @@ class Plan_delete(APIView):
         })
 
 class Project_delete(APIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
     def get_object(self, pk):
         try:
             return Projects.objects.get(pk=pk)
