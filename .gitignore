@@ -25,3 +25,5 @@ tests/report/
 
 *.jpg
 *.png
+
+media/*
