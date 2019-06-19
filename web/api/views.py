@@ -5,9 +5,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-from web.models import User, Employees, Clients, Projects, Plans, Tasks, ToDo, Photos, Comments, Likes, AllowPersons
-from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers, AllowPersons_Serializers
-from web.api.serializers import Tasks_Serializers, ToDo_serializers, User_Serializers, Photos_Serializers, Comments_Serializers
+from web.models import User, Employees, Clients, Projects, Plans, Tasks, ToDo, Photos, Comments, Likes, AllowPersons, Gallery, Purchases
+from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers, AllowPersons_Serializers, Purchases_serializers
+from web.api.serializers import Tasks_Serializers, ToDo_serializers, User_Serializers, Photos_Serializers, Comments_Serializers, Gallery_Serializers
 from django.contrib.auth.hashers import check_password
 from rest_framework.parsers import JSONParser, FormParser, FileUploadParser
 from django.http import Http404
@@ -18,7 +18,7 @@ import json
 
 #View of api/ url
 class index(APIView):
-    def post(self, request, format=None):
+    def get(self, request, format=None):
         return Response(status=200, data={
             "status": "ok",
             "message": "Hello!"
@@ -433,6 +433,71 @@ class ToDo_detail(APIView):
             "message": "Deleted"
         })
 
+#View of api/gallerys/ url
+class Gallery_list(APIView):
+    def get(self, request, format=None):
+        all_Gallerys = Gallery.objects.all()
+        serializer = Gallery_Serializers(all_Gallerys, many=True)
+        return Response(status=200, data={
+            "status": "ok",
+            "gallerys": serializer.data
+        })
+    def post(self, request, format=None):
+        authentication_classes = (TokenAuthentication,)
+        permission_classes = (IsAuthenticated,)
+        data = request.data
+        serializer = Gallery_Serializers(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201, data={
+                "status": "ok",
+                "Galerys": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+
+#View of api/gallerys/<int:pk>/ url
+class Gallery_detial(APIView):
+    parser_classes = [JSONParser, FormParser, FileUploadParser]
+    def get_object(self, pk):
+        try:
+            return Gallery.objects.get(pk=pk)
+        except Gallery.DoesNotExist:
+            raise Http404
+    def get(self, request, pk, format=None):
+        gallery = self.get_object(pk)
+        serializer = Gallery_Serializers(gallery)
+        return Response(status=200, data={
+            "status": "ok",
+            "Galerry": serializer.data
+        })
+    def put(self, request, pk, format=None):
+        authentication_classes = (TokenAuthentication,)
+        permission_classes = (IsAuthenticated,)
+        gallery = self.get_object(pk)
+        serializer = Gallery_Serializers(gallery, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=200, data={
+                "status": "ok",
+                "gallery": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+    def delete(self, request, pk, format=None):
+        authentication_classes = (TokenAuthentication,)
+        permission_classes = (IsAuthenticated,)
+        gallery = self.get_object(pk)
+        gallery.delete()
+        return Response(status=201, data={
+            "status": "ok",
+            "message": "Deleted"
+        })
+
 #View of api/photos/ url
 class Photos_list(APIView):
     def get(self, request, format=None):
@@ -649,6 +714,71 @@ class Comments_detail(APIView):
         permission_classes = (IsAuthenticated,)
         comment = self.get_object(pk)
         comment.delete()
+        return Response(status=201, data={
+            "status": "ok",
+            "message": "Deleted"
+        })
+
+#View of api/trakonesh/ url
+class Purchases_list(APIView):
+    def get(self, request, format=None):
+        all_Purchases = Purchases.objects.all()
+        serializer = Purchases_serializers(all_Purchases, many=True)
+        return Response(status=200, data={
+            "status": "ok",
+            "purchases": serializer.data
+        })
+    def post(self, request, format=None):
+        authentication_classes = (TokenAuthentication,)
+        permission_classes = (IsAuthenticated,)
+        data = request.data
+        serializer = Purchases_serializers(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201, data={
+                "status": "ok",
+                "purchases": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+
+#View of api/photos/<int:pk>/ url
+class Purchases_detial(APIView):
+    parser_classes = [JSONParser, FormParser, FileUploadParser]
+    def get_object(self, pk):
+        try:
+            return Purchases.objects.get(pk=pk)
+        except Purchases.DoesNotExist:
+            raise Http404
+    def get(self, request, pk, format=None):
+        purchase = self.get_object(pk)
+        serializer = Purchases_serializers(purchase)
+        return Response(status=200, data={
+            "status": "ok",
+            "purchases": serializer.data
+        })
+    def put(self, request, pk, format=None):
+        authentication_classes = (TokenAuthentication,)
+        permission_classes = (IsAuthenticated,)
+        purchase = self.get_object(pk)
+        serializer = Purchases_serializers(purchase, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=200, data={
+                "status": "ok",
+                "purchase": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+    def delete(self, request, pk, format=None):
+        authentication_classes = (TokenAuthentication,)
+        permission_classes = (IsAuthenticated,)
+        purchase = self.get_object(pk)
+        purchase.delete()
         return Response(status=201, data={
             "status": "ok",
             "message": "Deleted"

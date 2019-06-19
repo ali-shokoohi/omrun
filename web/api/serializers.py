@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos, ToDo
+from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos, ToDo, Gallery
 from web.models import User, Employees, Geographical, Clients, Tasks, Likes, AllowPersons
 from rest_framework.authtoken.models import Token
 
@@ -196,9 +196,28 @@ class AllowPersons_Serializers(serializers.ModelSerializer):
 
 #Serializer of Purchases model
 class Purchases_serializers(serializers.ModelSerializer):
+    trakonesh_name = serializers.CharField(source='name')
+    trakonesh_info = serializers.CharField(source='info')
+    trakonesh_price = serializers.CharField(source='amount')
+    trakonesh_type = serializers.CharField(source='via')
+    trakonesh_person = serializers.CharField(source='buyer')
     class Meta:
         model = Purchases
-        fields = ("buyer", "amount", "for_what", "date")
+        fields = ("id", "trakonesh_name", "trakonesh_info", "trakonesh_price",
+        "trakonesh_type", "trakonesh_person")
+
+#Serializers of gallery
+class Gallery_Serializers(serializers.ModelSerializer):
+    photos = serializers.SerializerMethodField('get_photo')
+    gallery_name = serializers.CharField(source="name")
+    class Meta:
+        model = Gallery
+        fields = ("id", "gallery_name", "admin", "photos")
+
+    def get_photo(self, gallery):
+        photos = Photos.objects.filter(gallery=gallery)
+        data = Photos_Serializers(photos, many=True).data
+        return data
 
 #Serializer of Comments model
 class Comments_Serializers(serializers.ModelSerializer):
@@ -208,7 +227,7 @@ class Comments_Serializers(serializers.ModelSerializer):
         fields = "__all__"
     
     def get_image_url(self, obj):
-        return obj.image.url
+        return obj.image.image.url
 
 #Serializers of Photos
 class Photos_Serializers(serializers.ModelSerializer):
@@ -247,4 +266,4 @@ class Likes_Serializers(serializers.ModelSerializer):
         fields = "__all__"
     
     def get_image_url(self, obj):
-        return obj.image.url
+        return obj.image.image.url

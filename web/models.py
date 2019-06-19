@@ -9,7 +9,7 @@ class User(AbstractUser):
 class Employees(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     post = models.TextField(null=False)
-    profile_pic = models.CharField(max_length=20)
+    profile_pic = models.ImageField(default="media/default-user.jpg")
 
     def __str__(self):
         return self.user.first_name
@@ -17,15 +17,18 @@ class Employees(models.Model):
 class Purchases(models.Model):
     buyer = models.ForeignKey(Employees, on_delete=models.CASCADE)
     amount = models.BigIntegerField(null=False)
-    for_what = models.TextField(null=False)
-    date = models.DateTimeField()
+    receipt = models.ImageField(default="media/default-receipt.jpg")
+    name = models.TextField()
+    via = models.TextField()
+    info = models.TextField(null=False)
+    date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str(self.amount)
 
 class Clients(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_pic = models.CharField(max_length=20)
+    profile_pic = models.ImageField(default="media/default-user.jpg")
 
     def __str__(self):
         return self.user.first_name
@@ -49,6 +52,7 @@ class Geographical(models.Model):
 class Projects(models.Model):
     name = models.TextField(null=False)
     price = models.BigIntegerField(null=False)
+    image = models.ImageField(default="media/default-project.jpg")
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(auto_now_add=True)
     done = models.BooleanField()
@@ -61,7 +65,7 @@ class Projects(models.Model):
 
 class Plans(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
-    photo = models.ImageField()
+    photo = models.ImageField(default="media/default-plan.png")
     data = models.TextField()
     kind = models.TextField()
 
@@ -89,9 +93,17 @@ class ToDo(models.Model):
     def __str__(self):
         return self.details
 
+class Gallery(models.Model):
+    name = models.TextField()
+    admin = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
 
 class Photos(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE)
     image = models.ImageField()
     caption = models.TextField()
 

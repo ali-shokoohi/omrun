@@ -17,10 +17,14 @@ def index(request):
         has_login = True
     else:
         has_login = False
+    projects_count = Projects.objects.all().count()
+    employees_count = Employees.objects.all().count()
     context = {
         "employees": employees,
         "comments": comments,
         "login": has_login,
+        "projects_count": projects_count,
+        "employees_count": employees_count
         }
     #Open template file and pass context to that
     return render(request=request, template_name="index/index.html", context=context)
