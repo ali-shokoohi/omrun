@@ -9,7 +9,7 @@ class User(AbstractUser):
 class Employees(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     post = models.TextField(null=False)
-    profile_pic = models.ImageField(default="media/default-user.jpg")
+    profile_pic = models.ImageField(default="default-user.jpg")
 
     def __str__(self):
         return self.user.first_name
@@ -17,7 +17,7 @@ class Employees(models.Model):
 class Purchases(models.Model):
     buyer = models.ForeignKey(Employees, on_delete=models.CASCADE)
     amount = models.BigIntegerField(null=False)
-    receipt = models.ImageField(default="media/default-receipt.jpg")
+    receipt = models.ImageField(default="default-receipt.jpg")
     name = models.TextField()
     via = models.TextField()
     info = models.TextField(null=False)
@@ -26,9 +26,22 @@ class Purchases(models.Model):
     def __str__(self):
         return str(self.amount)
 
+class Documents(models.Model):
+    name = models.TextField()
+    info = models.TextField()
+    file = models.FileField(default="default-file.pdf")
+    person = models.ForeignKey(Employees, on_delete=models.CASCADE)
+    time = models.DateTimeField(auto_now=True)
+    subtitle = models.TextField()
+
+    def __str__(self):
+        return self.name
+    
+
+
 class Clients(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(default="media/default-user.jpg")
+    profile_pic = models.ImageField(default="default-user.jpg")
 
     def __str__(self):
         return self.user.first_name
@@ -52,7 +65,7 @@ class Geographical(models.Model):
 class Projects(models.Model):
     name = models.TextField(null=False)
     price = models.BigIntegerField(null=False)
-    image = models.ImageField(default="media/default-project.jpg")
+    image = models.ImageField(default="default-project.jpg")
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(auto_now_add=True)
     done = models.BooleanField()
@@ -65,7 +78,7 @@ class Projects(models.Model):
 
 class Plans(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
-    photo = models.ImageField(default="media/default-plan.png")
+    photo = models.ImageField(default="default-plan.png")
     data = models.TextField()
     kind = models.TextField()
 

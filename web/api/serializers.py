@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos, ToDo, Gallery
-from web.models import User, Employees, Geographical, Clients, Tasks, Likes, AllowPersons
+from web.models import User, Employees, Geographical, Clients, Tasks, Likes, AllowPersons, Documents
 from rest_framework.authtoken.models import Token
 
 #Serializer of Token model
@@ -201,10 +201,29 @@ class Purchases_serializers(serializers.ModelSerializer):
     trakonesh_price = serializers.CharField(source='amount')
     trakonesh_type = serializers.CharField(source='via')
     trakonesh_person = serializers.CharField(source='buyer')
+    trakonesh_receipt = serializers.CharField(source='receipt')
+    trakonesh_receipt_url = serializers.SerializerMethodField('get_receipt_url')
     class Meta:
         model = Purchases
         fields = ("id", "trakonesh_name", "trakonesh_info", "trakonesh_price",
-        "trakonesh_type", "trakonesh_person")
+        "trakonesh_type", "trakonesh_receipt", "trakonesh_receipt_url", "trakonesh_person")
+    def get_receipt_url(self, obj):
+        return obj.receipt.url
+
+#Serializers of Documents model
+class Documents_Serializers(serializers.ModelSerializer):
+    duc_name = serializers.CharField(source='name')
+    duc_info = serializers.CharField(source='info')
+    duc_sub = serializers.CharField(source='subtitle')
+    duc_time = serializers.CharField(source='time')
+    duc_person = serializers.CharField(source='person')
+    duc_img = serializers.CharField(source='file')
+    duc_img_url = serializers.SerializerMethodField('get_file_url')
+    class Meta:
+        model = Documents
+        fields = ("duc_name", "duc_info", "duc_sub", "duc_time", "duc_person", "duc_img", "duc_img_url")
+    def get_file_url(self, obj):
+        return obj.file.url
 
 #Serializers of gallery
 class Gallery_Serializers(serializers.ModelSerializer):

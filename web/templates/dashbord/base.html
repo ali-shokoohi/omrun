@@ -120,7 +120,7 @@
                             </ul>
                         </li>
                         <li class="nav-item dropdown nav-user">
-                            <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{% static 'web/images/' %}{{user.profile_pic}}" alt="" class="user-avatar-md rounded-circle"></a>
+                            <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{user.profile_pic.url}}" alt="" class="user-avatar-md rounded-circle"></a>
                             <div class="dropdown-menu dropdown-menu-right nav-user-dropdown text-right" aria-labelledby="navbarDropdownMenuLink2">
                                 <div class="nav-user-info text-right">
                                     <h5 class="mb-0 text-white nav-user-name">{{user.user.first_name}} {{user.user.last_name}}</h5>

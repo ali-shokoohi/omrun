@@ -5,9 +5,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-from web.models import User, Employees, Clients, Projects, Plans, Tasks, ToDo, Photos, Comments, Likes, AllowPersons, Gallery, Purchases
+from web.models import User, Employees, Clients, Projects, Plans, Tasks, ToDo, Photos, Comments, Likes, AllowPersons, Gallery, Purchases, Documents
 from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers, AllowPersons_Serializers, Purchases_serializers
-from web.api.serializers import Tasks_Serializers, ToDo_serializers, User_Serializers, Photos_Serializers, Comments_Serializers, Gallery_Serializers
+from web.api.serializers import Tasks_Serializers, ToDo_serializers, User_Serializers, Photos_Serializers, Comments_Serializers, Gallery_Serializers, Documents_Serializers
 from django.contrib.auth.hashers import check_password
 from rest_framework.parsers import JSONParser, FormParser, FileUploadParser
 from django.http import Http404
@@ -779,6 +779,71 @@ class Purchases_detial(APIView):
         permission_classes = (IsAuthenticated,)
         purchase = self.get_object(pk)
         purchase.delete()
+        return Response(status=201, data={
+            "status": "ok",
+            "message": "Deleted"
+        })
+
+#View of api/documents/ url
+class Documents_list(APIView):
+    def get(self, request, format=None):
+        all_Documents = Documents.objects.all()
+        serializer = Documents_Serializers(all_Documents, many=True)
+        return Response(status=200, data={
+            "status": "ok",
+            "documents": serializer.data
+        })
+    def post(self, request, format=None):
+        authentication_classes = (TokenAuthentication,)
+        permission_classes = (IsAuthenticated,)
+        data = request.data
+        serializer = Documents_Serializers(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201, data={
+                "status": "ok",
+                "documents": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+
+#View of api/photos/<int:pk>/ url
+class Documents_detial(APIView):
+    parser_classes = [JSONParser, FormParser, FileUploadParser]
+    def get_object(self, pk):
+        try:
+            return Documents.objects.get(pk=pk)
+        except Documents.DoesNotExist:
+            raise Http404
+    def get(self, request, pk, format=None):
+        document = self.get_object(pk)
+        serializer = Documents_Serializers(document)
+        return Response(status=200, data={
+            "status": "ok",
+            "documents": serializer.data
+        })
+    def put(self, request, pk, format=None):
+        authentication_classes = (TokenAuthentication,)
+        permission_classes = (IsAuthenticated,)
+        document = self.get_object(pk)
+        serializer = Documents_Serializers(document, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=200, data={
+                "status": "ok",
+                "document": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+    def delete(self, request, pk, format=None):
+        authentication_classes = (TokenAuthentication,)
+        permission_classes = (IsAuthenticated,)
+        document = self.get_object(pk)
+        document.delete()
         return Response(status=201, data={
             "status": "ok",
             "message": "Deleted"
