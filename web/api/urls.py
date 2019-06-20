@@ -21,6 +21,9 @@ urlpatterns = [
     path('tasks/', views.Tasks_list.as_view(), name='tasks list'),
     path('tasks/<int:pk>/', views.Tasks_detial.as_view(), name='tasks detail'),
     
+    path('tasks-me/', views.TasksPerson_list.as_view(), name='tasks person list'),
+    path('tasks-me/<int:pk>/', views.TasksPerson_detial.as_view(), name='tasks person detail'),
+    
     path('todo/', views.ToDo_list.as_view(), name='todo list'),
     path('todo/<int:pk>/', views.ToDo_detail.as_view(), name='todo detail'),
     

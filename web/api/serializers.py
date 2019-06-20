@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos, ToDo, Gallery
+from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos, ToDo, Gallery, TasksPerson
 from web.models import User, Employees, Geographical, Clients, Tasks, Likes, AllowPersons, Documents
 from rest_framework.authtoken.models import Token
 
@@ -108,6 +108,7 @@ class Projects_Serializers(serializers.ModelSerializer):
 
 class Tasks_Serializers(serializers.ModelSerializer):
     todos = serializers.SerializerMethodField('get_todo')
+    task_person = serializers.SerializerMethodField('get_tasksperson')
 
     class Meta:
         model = Tasks
@@ -135,6 +136,11 @@ class Tasks_Serializers(serializers.ModelSerializer):
         todos =ToDo.objects.filter(task=task)
         data = ToDo_serializers(todos, many=True).data
         return data
+    
+    def get_tasksperson(self, obj):
+        persons = TasksPerson.objects.filter(task=obj)
+        data = TasksPerson_Serializers(persons, many=True).data
+        return data
 
 class ToDo_serializers(serializers.ModelSerializer):
     class Meta:
@@ -159,6 +165,11 @@ class ToDo_serializers(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+class TasksPerson_Serializers(serializers.ModelSerializer):
+    class Meta:
+        model = TasksPerson
+        fields = "__all__"
 
 class Plans_Serializers(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField(source='get_image_url')

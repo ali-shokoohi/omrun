@@ -94,9 +94,21 @@ class AllowPersons(models.Model):
 
 class Tasks(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+    important = models.IntegerField()
+    owner = models.ForeignKey(Employees, on_delete=models.CASCADE)
+    time = models.DateTimeField(auto_now=True)
     subject = models.TextField()
+    done = models.BooleanField(default=False)
     def __str__(self):
         return self.subject
+
+class TasksPerson(models.Model):
+    task = models.ForeignKey(Tasks, on_delete=models.CASCADE)
+    person = models.ForeignKey(Employees, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.person)
+    
 
 class ToDo(models.Model):
     task = models.ForeignKey(Tasks, on_delete=models.CASCADE)

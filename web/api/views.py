@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
 from web.models import User, Employees, Clients, Projects, Plans, Tasks, ToDo, Photos, Comments, Likes, AllowPersons, Gallery, Purchases, Documents
-from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers, AllowPersons_Serializers, Purchases_serializers
+from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers, AllowPersons_Serializers, Purchases_serializers, TasksPerson_Serializers
 from web.api.serializers import Tasks_Serializers, ToDo_serializers, User_Serializers, Photos_Serializers, Comments_Serializers, Gallery_Serializers, Documents_Serializers
 from django.contrib.auth.hashers import check_password
 from django.http import Http404
@@ -399,6 +399,66 @@ class ToDo_detail(APIView):
             "message": "Deleted"
         })
 
+#View of api/tasksPerson/ url
+class TasksPerson_list(APIView):
+    def get(self, request, format=None):
+        user = request.user
+        all_tasksPerson = TasksPerson.objects.filter(person=user)
+        serializer = TasksPerson_Serializers(all_tasksPerson, many=True)
+        return Response(status=200, data={
+            "status": "ok",
+            "tasksPerson": serializer.data
+        })
+    def post(self, request, format=None):
+        data = request.data
+        data["person"] = request.user.pk
+        serializer = TasksPerson_Serializers(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201, data={
+                "status": "ok",
+                "tasksPerson": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+#View of api/tasksPerson/<int:pk>/ url
+class TasksPerson_detial(APIView):
+    def get_object(self, pk):
+        try:
+            return TasksPerson.objects.get(pk=pk)
+        except TasksPerson.DoesNotExist:
+            raise Http404
+    def get(self, request, pk, format=None):
+        taskPerson = self.get_object(pk)
+        serializer = TasksPerson_Serializers(taskPerson)
+        return Response(status=200, data={
+            "status": "ok",
+            "tasksPerson": serializer.data
+        })
+    def put(self, request, pk, format=None):
+        taskPerson = self.get_object(pk)
+        serializer = TasksPerson_Serializers(taskPerson, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=200, data={
+                "status": "ok",
+                "taskPerson": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+    def delete(self, request, pk, format=None):
+        taskPerson = self.get_object(pk)
+        taskPerson.delete()
+        return Response(status=201, data={
+            "status": "ok",
+            "message": "Deleted"
+        })
+
+
 #View of api/gallerys/ url
 class Gallery_list(APIView):
     def get(self, request, format=None):
@@ -540,6 +600,7 @@ class Likes_list(APIView):
         })
     def post(self, request, format=None):
         data = request.data
+        data["user"] = request.user.pk
         serializer = Likes_Serializers(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -612,6 +673,7 @@ class Comments_list(APIView):
         })
     def post(self, request, format=None):
         data = request.data
+        data["user"] = request.user.pk
         serializer = Comments_Serializers(data=data)
         if serializer.is_valid():
             serializer.save()
