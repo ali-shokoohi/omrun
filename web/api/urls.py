@@ -15,6 +15,9 @@ urlpatterns = [
     path('plans/', views.plans_list.as_view(), name='plans list'),
     path('plans/<int:pk>/', views.plans_detail.as_view(), name='plan detail'),
     
+    path('workspaces/', views.WorkSpace_list.as_view(), name='workspace list'),
+    path('workspaces/<int:pk>/', views.WorkSpace_detail.as_view(), name='workspace detail'),
+    
     path('allow-person/', views.Allow_list.as_view(), name='allow person list'),
     path('allow-person/<int:pk>/', views.Allow_detail.as_view(), name='allow person detail'),
     
@@ -26,6 +29,12 @@ urlpatterns = [
     
     path('todo/', views.ToDo_list.as_view(), name='todo list'),
     path('todo/<int:pk>/', views.ToDo_detail.as_view(), name='todo detail'),
+    
+    path('notifications/', views.Notifications_list.as_view(), name='notifications list'),
+    path('notifications/<int:pk>/', views.Notifications_detial.as_view(), name='notifications detail'),
+    
+    path('notify-me/', views.NotiPerson_list.as_view(), name='notifications person list'),
+    path('notify-me/<int:pk>/', views.NotiPerson_detial.as_view(), name='notifications person detail'),
     
     path('gallerys/', views.Gallery_list.as_view(), name='gallery list'),
     path('gallerys/<int:pk>/', views.Gallery_detial.as_view(), name='gallery detail'),

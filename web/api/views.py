@@ -3,9 +3,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
-from web.models import User, Employees, Clients, Projects, Plans, Tasks, ToDo, Photos, Comments, Likes, AllowPersons, Gallery, Purchases, Documents
-from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers, AllowPersons_Serializers, Purchases_serializers, TasksPerson_Serializers
-from web.api.serializers import Tasks_Serializers, ToDo_serializers, User_Serializers, Photos_Serializers, Comments_Serializers, Gallery_Serializers, Documents_Serializers
+from web.models import User, Employees, Clients, Projects, Plans, Tasks, ToDo, Photos, Comments, Likes, AllowPersons, Gallery, Purchases, Documents, TasksPerson, WorkSpace, Notifications, NotiPerson
+from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers, AllowPersons_Serializers, Purchases_serializers, TasksPerson_Serializers, Notifications_Serializers
+from web.api.serializers import Tasks_Serializers, ToDo_serializers, User_Serializers, Photos_Serializers, Comments_Serializers, Gallery_Serializers, Documents_Serializers, WorkSpace_Serializers, Notifications_Serializers, NotiPerson_Serializers
 from django.contrib.auth.hashers import check_password
 from django.http import Http404
 import json
@@ -197,6 +197,79 @@ class plans_detail(APIView):
             "status": "ok",
             "message": "Deleted"
         })
+
+#View of api/plans/ url
+class WorkSpace_list(APIView):
+    def get_plan(self):
+        try:
+            return self.request.GET["plan"]
+        except:
+            raise Http404
+    def get_object(self, p_id):
+        try:
+            plan = Plans.objects.get(id=p_id)
+            return WorkSpace.objects.filter(plan=plan)
+        except WorkSpace.DoesNotExist:
+            raise Http404
+        except Plans.DoesNotExist:
+            raise Http404
+    def get(self, request, format=None):
+        plan_id = self.get_plan()
+        the_workSpaces = self.get_object(plan_id)
+        serializer = WorkSpace_Serializers(the_workSpaces, many=True)
+        return Response(status=200, data={
+            "status": "ok",
+            "workSpaces": serializer.data
+        })
+    def post(self, request, format=None):
+        data = request.data
+        serializer = WorkSpace_Serializers(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201, data={
+                "status": "ok",
+                "workSpace": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+
+#View of api/plans/<int:pk>/ url
+class WorkSpace_detail(APIView):
+    def get_object(self, pk):
+        try:
+            return WorkSpace.objects.get(pk=pk)
+        except WorkSpace.DoesNotExist:
+            raise Http404
+    def get(self, request, pk, format=None):
+        the_workSpace = self.get_object(pk)
+        serializer = WorkSpace_Serializers(the_workSpace)
+        return Response(status=200, data={
+            "status": "ok",
+            "workSpace": serializer.data
+        })
+    def put(self, request, pk, format=None):
+        the_workSpace = self.get_object(pk)
+        serializer = WorkSpace_Serializers(the_workSpace, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=200, data={
+                "status": "ok",
+                "woirkSpace": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+    def delete(self, request, pk, format=None):
+        the_workSpace = self.get_object(pk)
+        the_workSpace.delete()
+        return Response(status=201, data={
+            "status": "ok",
+            "message": "Deleted"
+        })
+
 
 #View of api/plans/ url
 class Allow_list(APIView):
@@ -403,7 +476,8 @@ class ToDo_detail(APIView):
 class TasksPerson_list(APIView):
     def get(self, request, format=None):
         user = request.user
-        all_tasksPerson = TasksPerson.objects.filter(person=user)
+        employee = Employees.objects.get(user=user)
+        all_tasksPerson = TasksPerson.objects.filter(person=employee)
         serializer = TasksPerson_Serializers(all_tasksPerson, many=True)
         return Response(status=200, data={
             "status": "ok",
@@ -439,24 +513,172 @@ class TasksPerson_detial(APIView):
         })
     def put(self, request, pk, format=None):
         taskPerson = self.get_object(pk)
-        serializer = TasksPerson_Serializers(taskPerson, data=request.data)
+        data = request.data
+        data["person"] = request.user.pk
+        person = Employees.objects.get(user=request.user)
+        if taskPerson.person == person:
+            serializer = TasksPerson_Serializers(taskPerson, data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=200, data={
+                    "status": "ok",
+                    "taskPerson": serializer.data
+                })
+            return Response(status=400, data={
+                "status": "bad",
+                "error": serializer.errors
+            })
+        else:
+            return Response(status=403, data={
+                "status": "bad",
+                "message": "Permission denied"
+            })
+    def delete(self, request, pk, format=None):
+        taskPerson = self.get_object(pk)
+        person = Employees.objects.get(user=request.user)
+        if taskPerson.person == person:
+            taskPerson.delete()
+            return Response(status=201, data={
+                "status": "ok",
+                "message": "Deleted"
+            })
+        else:
+            return Response(status=403, data={
+                "status": "bad",
+                "message": "Permission denied"
+            })
+
+#View of api/notifications/ url
+class Notifications_list(APIView):
+    def get(self, request, format=None):
+        all_notifications = Notifications.objects.all()
+        serializer = Notifications_Serializers(all_notifications, many=True)
+        return Response(status=200, data={
+            "status": "ok",
+            "notifications": serializer.data
+        })
+    def post(self, request, format=None):
+        data = request.data
+        serializer = Notifications_Serializers(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201, data={
+                "status": "ok",
+                "notification": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+#View of api/notifications/<int:pk>/ url
+class Notifications_detial(APIView):
+    def get_object(self, pk):
+        try:
+            return Notifications.objects.get(pk=pk)
+        except Notifications.DoesNotExist:
+            raise Http404
+    def get(self, request, pk, format=None):
+        notification = self.get_object(pk)
+        serializer = Notifications_Serializers(notification)
+        return Response(status=200, data={
+            "status": "ok",
+            "notification": serializer.data
+        })
+    def put(self, request, pk, format=None):
+        notification = self.get_object(pk)
+        serializer = Notifications_Serializers(notification, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(status=200, data={
                 "status": "ok",
-                "taskPerson": serializer.data
+                "notofication": serializer.data
             })
         return Response(status=400, data={
             "status": "bad",
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
-        taskPerson = self.get_object(pk)
-        taskPerson.delete()
+        notification = self.get_object(pk)
+        notification.delete()
         return Response(status=201, data={
             "status": "ok",
             "message": "Deleted"
         })
+
+#View of api/notifi-me/ url
+class NotiPerson_list(APIView):
+    def get(self, request, format=None):
+        user = request.user
+        all_notiPerson = NotiPerson.objects.filter(person=user)
+        serializer = NotiPerson_Serializers(all_notiPerson, many=True)
+        return Response(status=200, data={
+            "status": "ok",
+            "notifysPerson": serializer.data
+        })
+    def post(self, request, format=None):
+        data = request.data
+        data["person"] = request.user.pk
+        serializer = NotiPerson_Serializers(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201, data={
+                "status": "ok",
+                "notifysPerson": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+#View of api/tasksPerson/<int:pk>/ url
+class NotiPerson_detial(APIView):
+    def get_object(self, pk):
+        try:
+            return NotiPerson.objects.get(pk=pk)
+        except NotiPerson.DoesNotExist:
+            raise Http404
+    def get(self, request, pk, format=None):
+        notiPerson = self.get_object(pk)
+        serializer = NotiPerson_Serializers(notiPerson)
+        return Response(status=200, data={
+            "status": "ok",
+            "notifyPerson": serializer.data
+        })
+    def put(self, request, pk, format=None):
+        notiPerson = self.get_object(pk)
+        data = request.data
+        data["person"] = request.user.pk
+        user=request.user
+        if notiPerson.person == user:
+            serializer = NotiPerson_Serializers(notiPerson, data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=200, data={
+                    "status": "ok",
+                    "notifysPerson": serializer.data
+                })
+            return Response(status=400, data={
+                "status": "bad",
+                "error": serializer.errors
+            })
+        else:
+            return Response(status=403, data={
+                "status": "bad",
+                "message": "Permission denied"
+            })
+    def delete(self, request, pk, format=None):
+        notiPerson = self.get_object(pk)
+        user=request.user
+        if notiPerson.person == user:
+            notiPerson.delete()
+            return Response(status=201, data={
+                "status": "ok",
+                "message": "Deleted"
+            })
+        else:
+            return Response(status=403, data={
+                "status": "bad",
+                "message": "Permission denied"
+            })
 
 
 #View of api/gallerys/ url

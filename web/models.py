@@ -92,6 +92,12 @@ class AllowPersons(models.Model):
     def __str__(self):
         return str(self.user)
 
+class WorkSpace(models.Model):
+    subtitle = models.TextField()
+    photo = models.ImageField(default="default-plan.png")
+    data = models.TextField()
+    plan = models.ForeignKey(Plans, on_delete=models.CASCADE)
+
 class Tasks(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     important = models.IntegerField()
@@ -117,6 +123,23 @@ class ToDo(models.Model):
 
     def __str__(self):
         return self.details
+
+class Notifications(models.Model):
+    subtitle = models.TextField()
+    info = models.TextField()
+    time = models.DateTimeField(auto_now=True)
+    kind = models.TextField()
+    intent = models.TextField()
+
+    def __str__(self):
+        return self.subtitle
+
+class NotiPerson(models.Model):
+    notify = models.ForeignKey(Notifications, on_delete=models.CASCADE)
+    person = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.person
 
 class Gallery(models.Model):
     name = models.TextField()

@@ -118,10 +118,10 @@
                                                 </thead>
                                                 <tbody>
                                                     {% for project in projects %}
-                                                    <tr>
+                                                    <tr class="">
                                                         <td>{{project.id}}</td>
                                                         <td>
-                                                            <div class="m-r-10"><img src="{% static 'dashbord/images/product-pic-2.jpg' %}" alt="user" class="rounded" width="45"></div>
+                                                            <div class="m-r-10"><img src="{{project.image.url}}" alt="user" class="rounded" width="45"></div>
                                                         </td>
                                                         <td>{{project.name}}</td>
                                                         <td>${{project.price}}</td>

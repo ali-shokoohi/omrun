@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos, ToDo, Gallery, TasksPerson
-from web.models import User, Employees, Geographical, Clients, Tasks, Likes, AllowPersons, Documents
+from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos, ToDo, Gallery, TasksPerson, Notifications
+from web.models import User, Employees, Geographical, Clients, Tasks, Likes, AllowPersons, Documents, WorkSpace, NotiPerson
 from rest_framework.authtoken.models import Token
 
 #Serializer of Token model
@@ -139,7 +139,7 @@ class Tasks_Serializers(serializers.ModelSerializer):
     
     def get_tasksperson(self, obj):
         persons = TasksPerson.objects.filter(task=obj)
-        data = TasksPerson_Serializers(persons, many=True).data
+        data = TasksPerson_Serializers_Users(persons, many=True).data
         return data
 
 class ToDo_serializers(serializers.ModelSerializer):
@@ -167,19 +167,31 @@ class ToDo_serializers(serializers.ModelSerializer):
         return instance
 
 class TasksPerson_Serializers(serializers.ModelSerializer):
+    task = Tasks_Serializers(required=False)
     class Meta:
         model = TasksPerson
-        fields = "__all__"
+        fields = ("id", "task", "person")
+
+class TasksPerson_Serializers_Users(serializers.ModelSerializer):
+    class Meta:
+        model = TasksPerson
+        fields = ("person",)
 
 class Plans_Serializers(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField(source='get_image_url')
+    workSpace = serializers.SerializerMethodField('get_workspace')
 
     class Meta:
         model = Plans
-        fields = ("id", "photo", "data", "kind", "project", "image_url")
+        fields = ("id", "photo", "data", "kind", "project", "image_url", "workSpace")
     
     def get_image_url(self, obj):
         return obj.photo.url
+    
+    def get_workspace(self, obj):
+        workSpaces = WorkSpace.objects.filter(plan=obj)
+        data = WorkSpace_Serializers(workSpaces, many=True).data
+        return data
 
     def create(self, validated_data):
         project_id = validated_data.pop("project")
@@ -200,6 +212,11 @@ class Plans_Serializers(serializers.ModelSerializer):
 
         return instance
 
+class WorkSpace_Serializers(serializers.ModelSerializer):
+    class Meta:
+        model = WorkSpace
+        fields = "__all__"
+
 class AllowPersons_Serializers(serializers.ModelSerializer):
     class Meta:
         model = AllowPersons
@@ -209,10 +226,10 @@ class AllowPersons_Serializers(serializers.ModelSerializer):
 class Purchases_serializers(serializers.ModelSerializer):
     trakonesh_name = serializers.CharField(source='name')
     trakonesh_info = serializers.CharField(source='info')
-    trakonesh_price = serializers.CharField(source='amount')
+    trakonesh_price = serializers.IntegerField(source='amount')
     trakonesh_type = serializers.CharField(source='via')
     trakonesh_person = serializers.CharField(source='buyer')
-    trakonesh_receipt = serializers.CharField(source='receipt')
+    trakonesh_receipt = serializers.ImageField(source='receipt')
     trakonesh_receipt_url = serializers.SerializerMethodField('get_receipt_url')
     class Meta:
         model = Purchases
@@ -226,9 +243,9 @@ class Documents_Serializers(serializers.ModelSerializer):
     duc_name = serializers.CharField(source='name')
     duc_info = serializers.CharField(source='info')
     duc_sub = serializers.CharField(source='subtitle')
-    duc_time = serializers.CharField(source='time')
+    duc_time = serializers.DateTimeField(source='time')
     duc_person = serializers.CharField(source='person')
-    duc_img = serializers.CharField(source='file')
+    duc_img = serializers.ImageField(source='file')
     duc_img_url = serializers.SerializerMethodField('get_file_url')
     class Meta:
         model = Documents
@@ -236,10 +253,33 @@ class Documents_Serializers(serializers.ModelSerializer):
     def get_file_url(self, obj):
         return obj.file.url
 
+class Notifications_Serializers(serializers.ModelSerializer):
+    noti_sub = serializers.CharField(source="subtitle")
+    noti_info = serializers.CharField(source="info")
+    noti_time = serializers.DateTimeField(source="time")
+    noti_type = serializers.CharField(source="kind")
+    noti_intent = serializers.CharField(source="intent")
+    noti_to_person = serializers.SerializerMethodField('get_notiperson')
+
+    class Meta:
+        model = Notifications
+        fields = "__all__"
+    
+    def get_notiperson(self, obj):
+        persons = NotiPerson.objects.filter(notify=obj)
+        data = NotiPerson_Serializers(persons, many=True).data
+        return data
+
+class NotiPerson_Serializers(serializers.ModelSerializer):
+    class Meta:
+        model = NotiPerson
+        fields = "__all__"
+
 #Serializers of gallery
 class Gallery_Serializers(serializers.ModelSerializer):
     photos = serializers.SerializerMethodField('get_photo')
     gallery_name = serializers.CharField(source="name")
+    admin = User_Serializers_Public(required=False)
     class Meta:
         model = Gallery
         fields = ("id", "gallery_name", "admin", "photos")
@@ -251,6 +291,7 @@ class Gallery_Serializers(serializers.ModelSerializer):
 
 #Serializer of Comments model
 class Comments_Serializers(serializers.ModelSerializer):
+    author = User_Serializers_Public(required=False)
     image_url = serializers.SerializerMethodField(source='get_image_url')
     class Meta:
         model = Comments
