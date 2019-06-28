@@ -8,6 +8,7 @@ urlpatterns = [
     path('login/', views.login.as_view(), name='login'),
     
     path('employees/', views.Employees_list.as_view(), name='employees list'),
+    path('employees/<int:pk>/', views.Employees_detail.as_view(), name='employees detail'),
     
     path('projects/', views.projects_list.as_view(), name='projects list'),
     path('projects/<int:pk>/', views.projects_detial.as_view(), name='project detail'),
@@ -53,6 +54,11 @@ urlpatterns = [
     
     path('documents/', views.Documents_list.as_view(), name='documents list'),
     path('documents/<int:pk>/', views.Documents_detial.as_view(), name='documents detail'),
+    
+#    path('user-activity/', views.uSER.as_view(), name='documents list'),
+#    path('user-activity/<int:pk>/', views.Documents_detial.as_view(), name='documents detail'),
+
+    path('profile/', views.Profile_Page.as_view(), name='profile page'),
     
     path('projects/delete/<int:pk>/', views.Project_delete.as_view(), name='project delete'),
     path('plans/delete/<int:pk>/', views.Plan_delete.as_view(), name='plan delete')

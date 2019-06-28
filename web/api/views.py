@@ -2,10 +2,11 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework import permissions
 from rest_framework.authtoken.models import Token
-from web.models import User, Employees, Clients, Projects, Plans, Tasks, ToDo, Photos, Comments, Likes, AllowPersons, Gallery, Purchases, Documents, TasksPerson, WorkSpace, Notifications, NotiPerson
-from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers, AllowPersons_Serializers, Purchases_serializers, TasksPerson_Serializers, Notifications_Serializers
-from web.api.serializers import Tasks_Serializers, ToDo_serializers, User_Serializers, Photos_Serializers, Comments_Serializers, Gallery_Serializers, Documents_Serializers, WorkSpace_Serializers, Notifications_Serializers, NotiPerson_Serializers
+from web.models import User, Employees, Clients, Projects, Plans, Tasks, ToDo, Photos, Comments, Likes, AllowPersons, Gallery, Purchases, Documents, TasksPerson, WorkSpace, Notifications, NotiPerson, UserActivity
+from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers, AllowPersons_Serializers, Purchases_serializers, TasksPerson_Serializers, Notifications_Serializers, Profile_Serializers, UserActivity_Serializers
+from web.api.serializers import Tasks_Serializers, ToDo_serializers, User_Serializers, Photos_Serializers, Comments_Serializers, Gallery_Serializers, Documents_Serializers, WorkSpace_Serializers, Notifications_Serializers, NotiPerson_Serializers, User_Serializers_Public
 from django.contrib.auth.hashers import check_password
 from django.http import Http404
 import json
@@ -38,13 +39,14 @@ class login(APIView):
 
 class Employees_list(APIView):
     def get(self, request, format=None):
-        all_employees = Employees.objects.all()
-        serializer = Employees_Serializers(all_employees, many=True)
+        all_users = User.objects.all()
+        serializer = User_Serializers_Public(all_users, many=True)
         return Response(status=200, data={
             "status": "ok",
-            "projects": serializer.data
+            "users": serializer.data
         })
     def post(self, request, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
         user_data = data["user"]
         user_serializer = User_Serializers(data=user_data)
@@ -55,7 +57,7 @@ class Employees_list(APIView):
                 serializer.save()
                 return Response(status=201, data={
                     "status": "ok",
-                    "project": serializer.data
+                    "users": serializer.data
                 })
             return Response(status=400, data={
                 "status": "bad",
@@ -66,7 +68,42 @@ class Employees_list(APIView):
             "error": user_serializer.errors
         })
 
-
+#View of api/employees/<int:pk>/ url
+class Employees_detail(APIView):
+    def get_object(self, pk):
+        try:
+            return User.objects.get(pk=pk)
+        except Projects.DoesNotExist:
+            raise Http404
+    def get(self, request, pk, format=None):
+        user = self.get_object(pk)
+        serializer = User_Serializers_Public(user)
+        return Response(status=200, data={
+            "status": "ok",
+            "user": serializer.data
+        })
+    def put(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
+        user = self.get_object(pk)
+        serializer = User_Serializers_Public(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=200, data={
+                "status": "ok",
+                "user": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+    def delete(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
+        user = self.get_object(pk)
+        user.delete()
+        return Response(status=201, data={
+            "status": "ok",
+            "message": "Deleted"
+        })
 
 #View of api/projects/ url
 class projects_list(APIView):
@@ -78,6 +115,7 @@ class projects_list(APIView):
             "projects": serializer.data
         })
     def post(self, request, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
         serializer = Projects_Serializers(data=data)
         if serializer.is_valid():
@@ -106,6 +144,7 @@ class projects_detial(APIView):
             "projects": serializer.data
         })
     def put(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         project = self.get_object(pk)
         serializer = Projects_Serializers(project, data=request.data)
         if serializer.is_valid():
@@ -119,6 +158,7 @@ class projects_detial(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         project = self.get_object(pk)
         project.delete()
         return Response(status=201, data={
@@ -150,6 +190,7 @@ class plans_list(APIView):
             "plans": serializer.data
         })
     def post(self, request, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
         serializer = Plans_Serializers(data=data)
         if serializer.is_valid():
@@ -178,6 +219,7 @@ class plans_detail(APIView):
             "plans": serializer.data
         })
     def put(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         plan = self.get_object(pk)
         serializer = Plans_Serializers(plan, data=request.data)
         if serializer.is_valid():
@@ -191,6 +233,7 @@ class plans_detail(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         plan = self.get_object(pk)
         plan.delete()
         return Response(status=201, data={
@@ -222,6 +265,7 @@ class WorkSpace_list(APIView):
             "workSpaces": serializer.data
         })
     def post(self, request, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
         serializer = WorkSpace_Serializers(data=data)
         if serializer.is_valid():
@@ -250,6 +294,7 @@ class WorkSpace_detail(APIView):
             "workSpace": serializer.data
         })
     def put(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         the_workSpace = self.get_object(pk)
         serializer = WorkSpace_Serializers(the_workSpace, data=request.data)
         if serializer.is_valid():
@@ -263,6 +308,7 @@ class WorkSpace_detail(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         the_workSpace = self.get_object(pk)
         the_workSpace.delete()
         return Response(status=201, data={
@@ -295,6 +341,7 @@ class Allow_list(APIView):
             "persons": serializer.data
         })
     def post(self, request, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
         serializer = AllowPersons_Serializers(data=data)
         if serializer.is_valid():
@@ -323,6 +370,7 @@ class Allow_detail(APIView):
             "persons": serializer.data
         })
     def put(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         person = self.get_object(pk)
         serializer = AllowPersons_Serializers(person, data=request.data)
         if serializer.is_valid():
@@ -336,6 +384,7 @@ class Allow_detail(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         person = self.get_object(pk)
         person.delete()
         return Response(status=201, data={
@@ -353,6 +402,7 @@ class Tasks_list(APIView):
             "tasks": serializer.data
         })
     def post(self, request, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
         serializer = Tasks_Serializers(data=data)
         if serializer.is_valid():
@@ -380,6 +430,7 @@ class Tasks_detial(APIView):
             "tasks": serializer.data
         })
     def put(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         task = self.get_object(pk)
         serializer = Tasks_Serializers(task, data=request.data)
         if serializer.is_valid():
@@ -393,6 +444,7 @@ class Tasks_detial(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         task = self.get_object(pk)
         task.delete()
         return Response(status=201, data={
@@ -424,6 +476,7 @@ class ToDo_list(APIView):
             "todos": serializer.data
         })
     def post(self, request, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
         serializer = ToDo_serializers(data=data)
         if serializer.is_valid():
@@ -452,6 +505,7 @@ class ToDo_detail(APIView):
             "todo": serializer.data
         })
     def put(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         todo = self.get_object(pk)
         serializer = ToDo_serializers(todo, data=request.data)
         if serializer.is_valid():
@@ -465,6 +519,7 @@ class ToDo_detail(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         todo = self.get_object(pk)
         todo.delete()
         return Response(status=201, data={
@@ -531,9 +586,10 @@ class TasksPerson_detial(APIView):
         else:
             return Response(status=403, data={
                 "status": "bad",
-                "message": "Permission denied"
+                "error": "Permission denied"
             })
     def delete(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         taskPerson = self.get_object(pk)
         person = Employees.objects.get(user=request.user)
         if taskPerson.person == person:
@@ -545,7 +601,7 @@ class TasksPerson_detial(APIView):
         else:
             return Response(status=403, data={
                 "status": "bad",
-                "message": "Permission denied"
+                "error": "Permission denied"
             })
 
 #View of api/notifications/ url
@@ -558,6 +614,7 @@ class Notifications_list(APIView):
             "notifications": serializer.data
         })
     def post(self, request, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
         serializer = Notifications_Serializers(data=data)
         if serializer.is_valid():
@@ -585,6 +642,7 @@ class Notifications_detial(APIView):
             "notification": serializer.data
         })
     def put(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         notification = self.get_object(pk)
         serializer = Notifications_Serializers(notification, data=request.data)
         if serializer.is_valid():
@@ -598,6 +656,7 @@ class Notifications_detial(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         notification = self.get_object(pk)
         notification.delete()
         return Response(status=201, data={
@@ -616,6 +675,7 @@ class NotiPerson_list(APIView):
             "notifysPerson": serializer.data
         })
     def post(self, request, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
         data["person"] = request.user.pk
         serializer = NotiPerson_Serializers(data=data)
@@ -644,6 +704,7 @@ class NotiPerson_detial(APIView):
             "notifyPerson": serializer.data
         })
     def put(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         notiPerson = self.get_object(pk)
         data = request.data
         data["person"] = request.user.pk
@@ -663,7 +724,7 @@ class NotiPerson_detial(APIView):
         else:
             return Response(status=403, data={
                 "status": "bad",
-                "message": "Permission denied"
+                "error": "Permission denied"
             })
     def delete(self, request, pk, format=None):
         notiPerson = self.get_object(pk)
@@ -677,7 +738,7 @@ class NotiPerson_detial(APIView):
         else:
             return Response(status=403, data={
                 "status": "bad",
-                "message": "Permission denied"
+                "error": "Permission denied"
             })
 
 
@@ -691,6 +752,7 @@ class Gallery_list(APIView):
             "gallerys": serializer.data
         })
     def post(self, request, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
         serializer = Gallery_Serializers(data=data)
         if serializer.is_valid():
@@ -719,6 +781,7 @@ class Gallery_detial(APIView):
             "Galerry": serializer.data
         })
     def put(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         gallery = self.get_object(pk)
         serializer = Gallery_Serializers(gallery, data=request.data)
         if serializer.is_valid():
@@ -732,6 +795,7 @@ class Gallery_detial(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         gallery = self.get_object(pk)
         gallery.delete()
         return Response(status=201, data={
@@ -749,6 +813,7 @@ class Photos_list(APIView):
             "photos": serializer.data
         })
     def post(self, request, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
         serializer = Photos_Serializers(data=data)
         if serializer.is_valid():
@@ -777,6 +842,7 @@ class Photos_detial(APIView):
             "photos": serializer.data
         })
     def put(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         photo = self.get_object(pk)
         serializer = Photos_Serializers(photo, data=request.data)
         if serializer.is_valid():
@@ -790,6 +856,7 @@ class Photos_detial(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
         photo = self.get_object(pk)
         photo.delete()
         return Response(status=201, data={
@@ -850,8 +917,10 @@ class Likes_detail(APIView):
             "like": serializer.data
         })
     def put(self, request, pk, format=None):
+        data = request.data
+        data["user"] = request.user.pk
         like = self.get_object(pk)
-        serializer = Likes_Serializers(like, data=request.data)
+        serializer = Likes_Serializers(like, data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(status=200, data={
@@ -863,12 +932,21 @@ class Likes_detail(APIView):
             "error": serializer.errors
         })
     def delete(self, request, pk, format=None):
+        data = request.data
+        user = request.user
+        data["user"] = user.pk
         like = self.get_object(pk)
-        like.delete()
-        return Response(status=201, data={
-            "status": "ok",
-            "message": "Deleted"
-        })
+        if like.user == user or user.is_superuser:
+            like.delete()
+            return Response(status=201, data={
+                "status": "ok",
+                "message": "Deleted"
+            })
+        else:
+            return Response(status=403, data={
+                "status": "bad",
+                "error": "Permission denied"
+            })
 
 #View of api/comments/ url
 class Comments_list(APIView):
@@ -923,30 +1001,53 @@ class Comments_detail(APIView):
             "comment": serializer.data
         })
     def put(self, request, pk, format=None):
+        data = request.data
+        user = request.user
         comment = self.get_object(pk)
-        serializer = Comments_Serializers(comment, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=200, data={
-                "status": "ok",
-                "comment": serializer.data
+        if comment.author == user or user.is_superuser:
+            if user.is_superuser is not True:
+                data["user"] = user.pk
+            serializer = Comments_Serializers(comment, data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=200, data={
+                    "status": "ok",
+                    "comment": serializer.data
+                })
+            return Response(status=400, data={
+                "status": "bad",
+                "error": serializer.errors
             })
-        return Response(status=400, data={
-            "status": "bad",
-            "error": serializer.errors
-        })
+        else:
+            return Response(status=403, data={
+                "status": "bad",
+                "error": "Permission denied"
+            })
     def delete(self, request, pk, format=None):
+        data = request.data
+        user = request.user
+        data["user"] = user.pk
         comment = self.get_object(pk)
-        comment.delete()
-        return Response(status=201, data={
-            "status": "ok",
-            "message": "Deleted"
-        })
+        if comment.author == user or user.is_superuser:
+            comment.delete()
+            return Response(status=201, data={
+                "status": "ok",
+                "message": "Deleted"
+            })
+        else:
+            return Response(status=403, data={
+                "status": "bad",
+                "error": "Permission denied"
+            })
 
 #View of api/trakonesh/ url
 class Purchases_list(APIView):
     def get(self, request, format=None):
-        all_Purchases = Purchases.objects.all()
+        if user.is_superuser:
+            all_Purchases = Purchases.objects.all()
+        else:
+            employee = Employees.objects.get(user=user)
+            all_Purchases = Purchases.objects.filter(buyer=employee)
         serializer = Purchases_serializers(all_Purchases, many=True)
         return Response(status=200, data={
             "status": "ok",
@@ -974,32 +1075,57 @@ class Purchases_detial(APIView):
         except Purchases.DoesNotExist:
             raise Http404
     def get(self, request, pk, format=None):
+        data = request.data
+        user = request.user
         purchase = self.get_object(pk)
-        serializer = Purchases_serializers(purchase)
-        return Response(status=200, data={
-            "status": "ok",
-            "purchases": serializer.data
-        })
-    def put(self, request, pk, format=None):
-        purchase = self.get_object(pk)
-        serializer = Purchases_serializers(purchase, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+        if purchase.author == user or user.is_superuser:
+            serializer = Purchases_serializers(purchase)
             return Response(status=200, data={
                 "status": "ok",
-                "purchase": serializer.data
+                "purchases": serializer.data
             })
-        return Response(status=400, data={
-            "status": "bad",
-            "error": serializer.errors
-        })
+        else:
+            return Response(status=403, data={
+                "status": "bad",
+                "error": "Permission denied"
+            })
+    def put(self, request, pk, format=None):
+        data = request.data
+        user = request.user
+        purchase = self.get_object(pk)
+        if purchase.author == user or user.is_superuser:
+            if user.is_superuser is not True:
+                data["trakonesh_person"]
+            serializer = Purchases_serializers(purchase, data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=200, data={
+                    "status": "ok",
+                    "purchase": serializer.data
+                })
+            return Response(status=400, data={
+                "status": "bad",
+                "error": serializer.errors
+            })
+        else:
+            return Response(status=403, data={
+                "status": "bad",
+                "error": "Permission denied"
+            })
     def delete(self, request, pk, format=None):
         purchase = self.get_object(pk)
-        purchase.delete()
-        return Response(status=201, data={
-            "status": "ok",
-            "message": "Deleted"
-        })
+        user = request.user
+        if purchase.author == user or user.is_superuser:
+            purchase.delete()
+            return Response(status=201, data={
+                "status": "ok",
+                "message": "Deleted"
+            })
+        else:
+            return Response(status=403, data={
+                "status": "bad",
+                "error": "Permission denied"
+            })
 
 #View of api/documents/ url
 class Documents_list(APIView):
@@ -1054,6 +1180,55 @@ class Documents_detial(APIView):
     def delete(self, request, pk, format=None):
         document = self.get_object(pk)
         document.delete()
+        return Response(status=201, data={
+            "status": "ok",
+            "message": "Deleted"
+        })
+
+#View of api/tasksPerson/<int:pk>/ url
+class Profile_Page(APIView):
+    def get(self, request, format=None):
+        user = request.user
+        serializer = Profile_Serializers(user)
+        data = serializer.data
+        data["password"]="****"
+        return Response(status=200, data={
+            "status": "ok",
+            "profile": data
+        })
+    def post(self, request, format=None):
+        self.permission_classes = (permissions.IsAdminUser,)
+        data = request.data
+        serializer = Profile_Serializers(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201, data={
+                "status": "ok",
+                "profile": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+    def put(self, request, format=None):
+        data = request.data
+        data["pk"] = request.user.pk
+        data["username"] = request.user.username
+        user=request.user
+        serializer = Profile_Serializers(user, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=200, data={
+                "status": "ok",
+                "profile": serializer.data
+            })
+        return Response(status=400, data={
+            "status": "bad",
+            "error": serializer.errors
+        })
+    def delete(self, request, pk, format=None):
+        user=request.user
+        user.delete()
         return Response(status=201, data={
             "status": "ok",
             "message": "Deleted"

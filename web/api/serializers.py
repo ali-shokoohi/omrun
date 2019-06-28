@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos, ToDo, Gallery, TasksPerson, Notifications
+from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos, ToDo, Gallery, TasksPerson, Notifications, UserActivity
 from web.models import User, Employees, Geographical, Clients, Tasks, Likes, AllowPersons, Documents, WorkSpace, NotiPerson
 from rest_framework.authtoken.models import Token
 
@@ -26,7 +26,7 @@ class User_Serializers(serializers.ModelSerializer):
 class User_Serializers_Public(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "email")
+        fields = ("id", "first_name", "last_name", "email", "post", "is_superuser", "profile_pic")
 
 #Serializer of Employees
 class Employees_Serializers(serializers.ModelSerializer):
@@ -263,7 +263,7 @@ class Notifications_Serializers(serializers.ModelSerializer):
 
     class Meta:
         model = Notifications
-        fields = "__all__"
+        fields = ("noti_sub", "noti_info", "noti_time", "noti_type", "noti_intent", "noti_to_person")
     
     def get_notiperson(self, obj):
         persons = NotiPerson.objects.filter(notify=obj)
@@ -338,3 +338,35 @@ class Likes_Serializers(serializers.ModelSerializer):
     
     def get_image_url(self, obj):
         return obj.image.image.url
+
+class Profile_Serializers(serializers.ModelSerializer):
+    activity = serializers.SerializerMethodField('get_useractivity')
+    class Meta:
+        model = User
+        fields = ("id", "username", "first_name", "last_name", "post", "email", "password", "activity", "profile_pic")
+    def get_useractivity(self, obj):
+        activity = UserActivity.objects.filter(user=obj)
+        data = UserActivity_Serializers(activity, many=True).data
+        return data
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+    def update(self, instance, validated_data):
+
+        password = validated_data.pop("password")
+
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.email = validated_data.get('email', instance.email)
+        instance.set_password(password)
+        instance.save()
+        return instance
+
+class UserActivity_Serializers(serializers.ModelSerializer):
+    act_pic = serializers.CharField(source='image')
+    act_sub = serializers.CharField(source='subtitle')
+    act_text = serializers.CharField(source='text')
+    act_time = serializers.DateTimeField(source='time')
+    class Meta:
+        model = UserActivity
+        fields = ("act_pic", "act_sub", "act_text", "act_time")

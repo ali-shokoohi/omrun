@@ -4,7 +4,8 @@ from django.contrib.auth.models import AbstractUser
 
 #Modify django user or use this
 class User(AbstractUser):
-    pass
+    profile_pic = models.ImageField(default="default-user.jpg")
+    post = models.TextField(null=False)
 
 class Employees(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -137,6 +138,7 @@ class Notifications(models.Model):
 class NotiPerson(models.Model):
     notify = models.ForeignKey(Notifications, on_delete=models.CASCADE)
     person = models.ForeignKey(User, on_delete=models.CASCADE)
+    read = models.BooleanField(default=False)
 
     def __str__(self):
         return self.person
@@ -174,3 +176,10 @@ class Likes(models.Model):
 
     def __str__(self):
         return self.user.first_name
+
+class UserActivity(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ImageField(default="default-activity.jpg")
+    subtitle = models.TextField()
+    text = models.TextField()
+    time = models.DateTimeField()

@@ -163,7 +163,7 @@
 						</span>
 						<div class="desc">
 							<h3>ساخت مکان های عمومی</h3>
-							<p>توضیحات راجب این بخش</p>
+							<p>ساخت مراکز تفریحی و استراحتگاه ها</p>
 						</div>
 					</div>
 				</div>
@@ -174,7 +174,7 @@
 						</span>
 						<div class="desc">
 							<h3>ساخت مدل ها</h3>
-							<p>توضیحات راجب این بخش</p>
+							<p>طراحی مدل ها و ارائه پیش ساخت ها</p>
 						</div>
 					</div>
 				</div>
@@ -185,7 +185,7 @@
 						</span>
 						<div class="desc">
 							<h3>طراحی ساختمان</h3>
-							<p>توضیحات راجب این بخش</p>
+							<p>ساخت انواع ساختمان های اداری و مسکونی</p>
 							</div>
 					</div>
 				</div>
@@ -196,7 +196,7 @@
 						</span>
 						<div class="desc">
 							<h3>خدمات ساختمانی</h3>
-							<p>توضیحات راجب این بخش</p>
+							<p>ارائه انواع خدمات ساختمانی</p>
 						</div>
 					</div>
 				</div>
@@ -207,7 +207,7 @@
 						</span>
 						<div class="desc">
 							<h3>طرح های ساختمانی</h3>
-							<p>توضیحات راجب این بخش</p>
+							<p>پیاده سازی و انجام انواع طرح ها</p>
 						</div>
 					</div>
 				</div>
@@ -218,7 +218,7 @@
 						</span>
 						<div class="desc">
 							<h3>مدیریت ساخت و ساز</h3>
-							<p>توضیحات راجب این بخش</p>
+							<p>نظارت ۲۴ ساعته بر عملیات</p>
 						</div>
 					</div>
 				</div>
@@ -233,28 +233,28 @@
 				<div class="col-md-3 col-sm-6 aside-stretch text-center animate-box">
 					<div class="counter-entry">
 						<span class="icon icon-white"><i class="flaticon-skyline"></i></span>
-						<span class="colorlib-counter js-counter" data-from="0" data-to="{{ projects_count }}" data-speed="5000" data-refresh-interval="50"></span>
+						<span class="colorlib-counter js-counter" data-from="0" data-to="{{ projects_count }}" data-speed="2450" data-refresh-interval="500"></span>
 						<span class="colorlib-counter-label">پروژه ها</span>
 					</div>
 				</div>
 				<div class="col-md-3 col-sm-6 text-center animate-box">
 					<div class="counter-entry">
 						<span class="icon"><i class="flaticon-engineer"></i></span>
-						<span class="colorlib-counter js-counter" data-from="0" data-to="{{ employees_count }}" data-speed="5000" data-refresh-interval="50"></span>
+						<span class="colorlib-counter js-counter" data-from="0" data-to="{{ employees_count }}" data-speed="2450" data-refresh-interval="50"></span>
 						<span class="colorlib-counter-label">کارمندان</span>
 					</div>
 				</div>
 				<div class="col-md-3 col-sm-6 text-center animate-box">
 					<div class="counter-entry">
 						<span class="icon"><i class="flaticon-architect-with-helmet"></i></span>
-						<span class="colorlib-counter js-counter" data-from="0" data-to="5987" data-speed="5000" data-refresh-interval="50"></span>
+						<span class="colorlib-counter js-counter" data-from="0" data-to="574" data-speed="2450" data-refresh-interval="50"></span>
 						<span class="colorlib-counter-label">سازندگان</span>
 					</div>
 				</div>
 				<div class="col-md-3 col-sm-6 text-center animate-box">
 					<div class="counter-entry">
 						<span class="icon"><i class="flaticon-worker"></i></span>
-						<span class="colorlib-counter js-counter" data-from="0" data-to="3999" data-speed="5000" data-refresh-interval="50"></span>
+						<span class="colorlib-counter js-counter" data-from="0" data-to="714" data-speed="2450" data-refresh-interval="50"></span>
 						<span class="colorlib-counter-label">همکاران</span>
 					</div>
 				</div>
@@ -267,7 +267,7 @@
 			<div class="row">
 				<div class="col-md-8 col-md-offset-2 text-center colorlib-heading animate-box">
 					<h2 id="projects">پروژه های ما</h2>
-					<p>یک جمله جهت زیبایی صفحه</p>
+					<p>نگاهی کلی بر خدمات ما</p>
 				</div>
 			</div>
 			<div class="row">
@@ -350,7 +350,7 @@
 					<div class="about-flex">
 						<div class="col-half">
 							{% for employee in employees %}
-							<a href="#" class="staff-img" style="background-image: url({% static 'web/images/'%}{{ employee.profile_pic }});">
+							<a href="#" class="staff-img" style="background-image: url({{ employee.profile_pic.url }});">
 								<div class="desc-staff">
 									<h3>{{ employee.user.first_name }} {{ employee.user.last_name }}</h3>
 									<span>{{ employee.post }}</span>

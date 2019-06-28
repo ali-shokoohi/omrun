@@ -5993,16 +5993,6 @@ button.close {
   border: 0;
 }
 
-/*Create styles for app li*/
-.app {
-  border-style: solid;
-  border-color: #337ab7;
-}
-
-.app:hover {
-  border-color: #985f0d;
-}
-
 .hidden {
   display: none !important;
 }
