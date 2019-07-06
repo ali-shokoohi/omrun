@@ -72,25 +72,19 @@
 						</div>
 						<div class="col-xs-10 text-right menu-1">
 							<ul>
-								<li class="active"><a href="/">خانه</a></li>
+								<li class=""><a href="/">خانه</a></li>
 								{% if login is True %}
 										<li class=""><a href="/dashbord/">داشبورد</a></li>
 								{% else %}
 										<li class=""><a href="/login/">ورود</a></li>
 								{% endif %}
-								<li class="has-dropdown">
-									<a href="#colorlib-project">پروژه ها</a>
-									<ul class="dropdown">
-										<li class="text-right"><a href="#">تجاری</a></li>
-										<li class="text-right"><a href="#">املاک</a></li>
-										<li class="text-right"><a href="#">خانه</a></li>
-										<li class="text-right"><a href="#">در دست ساخت</a></li>
-									</ul>
+								<li>
+									<a href="/projects/">پروژه ها</a>
 								</li>
-								<li><a href="#colorlib-footer">تماس با ما</a></li>
-								<li><a href="#colorlib-counter">درباره ما</a></li>
-								<li><a href="blog.html">وبلاگ</a></li>
-								<li><a href="#colorlib-services">خدمات</a></li>
+								<li><a href="/contact/">تماس با ما</a></li>
+								<li><a href="/about/">درباره ما</a></li>
+								<li><a href="/employees/">کارمندان</a></li>
+								<li><a href="/services/">خدمات</a></li>
 								<li></li>
 								<li class="app"><a href="/media/app.apk">دریافت برنامه</a></li>
 							</ul>

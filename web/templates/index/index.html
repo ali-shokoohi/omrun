@@ -271,66 +271,18 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4 animate-box">
-					<div class="project-entry">
-						<a href="project.html" class="project-img text-center" style="background-image: url({% static 'web/images/building-1.jpg' %});">
-							<span class="icon"><i class="icon-search2"></i></span>
-						</a>
-						<div class="text-right desc">
-							<h3><a href="project.html">طراحی داخلی آپارتمان</a></h3>
+				{% for project in projects %}
+					<div class="col-md-4 animate-box">
+						<div class="project-entry">
+							<a href="/projects/{{project.id}}" class="project-img text-center" style="background-image: url({{ project.image.url }});">
+								<span class="icon"><i class="icon-search2"></i></span>
+							</a>
+							<div class="text-right desc">
+								<h3><a href="/projects/{{project.id}}">{{project.name}}</a></h3>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-md-8 animate-box">
-					<div class="project-entry">
-						<a href="project.html" class="project-img text-center" style="background-image: url({% static 'web/images/building-2.jpg' %});">
-							<span class="icon"><i class="icon-search2"></i></span>
-						</a>
-						<div class="text-right desc">
-							<h3><a href="project.html">محیط شرکت</a></h3>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-6 animate-box">
-					<div class="project-entry">
-						<a href="project.html" class="project-img text-center" style="background-image: url({% static 'web/images/building-3.jpg' %});">
-							<span class="icon"><i class="icon-search2"></i></span>
-						</a>
-						<div class="text-right desc">
-							<h3><a href="project.html">ساختمان های مسکونی</a></h3>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-6 animate-box">
-					<div class="project-entry">
-						<a href="project.html" class="project-img text-center" style="background-image: url({% static 'web/images/building-4.jpg' %});">
-							<span class="icon"><i class="icon-search2"></i></span>
-						</a>
-						<div class="text-right desc">
-							<h3><a href="project.html">طراحی داخلی آشپزخانه</a></h3>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-8 animate-box">
-					<div class="project-entry">
-						<a href="project.html" class="project-img text-center" style="background-image: url({% static 'web/images/building-5.jpg' %});">
-							<span class="icon"><i class="icon-search2"></i></span>
-						</a>
-						<div class="text-right desc">
-							<h3><a href="project.html">مجتمع تجاری</a></h3>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4 animate-box">
-					<div class="project-entry">
-						<a href="project.html" class="project-img text-center" style="background-image: url({% static 'web/images/building-6.jpg' %});">
-							<span class="icon"><i class="icon-search2"></i></span>
-						</a>
-						<div class="text-right desc">
-							<h3><a href="project.html">ساخت هتل ها</a></h3>
-						</div>
-					</div>
-				</div>
+				{% endfor %}
 			</div>
 		</div>
 	</div>
@@ -342,7 +294,7 @@
 			<div class="row">
 				<div class="col-md-8 col-md-offset-2 text-center colorlib-heading colorlib-heading2 animate-box">
 					<h2>تیم ما</h2>
-					<p>یک جمله جهت زیبایی صفحه</p>
+					<p>معرفی و آشنایی با چند تن از همکاران ما</p>
 				</div>
 			</div>
 			<div class="row">

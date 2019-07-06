@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{% static 'dashbord/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css' %}">
     <link rel="stylesheet" href="{% static 'dashbord/vendor/charts/c3charts/c3.css' %}">
     <link rel="stylesheet" href="{% static 'dashbord/vendor/fonts/flag-icon-css/flag-icon.min.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'web/favicon.ico' %}">
     <title>{% block title %}{% endblock title %}</title>
 </head>
 
@@ -44,47 +45,33 @@
                             <a class="nav-link nav-icons" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-fw fa-envelope"></i> <span class="indicator"></span></a>
                             <ul class="dropdown-menu dropdown-menu-right notification-dropdown">
                                 <li>
-                                    <div class="notification-title"> نوتیفیکیشن</div>
-                                    <div class="notification-list">
-                                        <div class="list-group">
-                                            <a href="#" class="list-group-item list-group-item-action active">
-                                                <div class="notification-info">
-                                                    <div class="notification-list-user-img"><img src="{% static 'dashbord/images/avatar-2.jpg' %}" alt="" class="user-avatar-md rounded-circle"></div>
-                                                    <div class="notification-list-user-block"><span class="notification-list-user-name">Jeremy Rakestraw</span>accepted your invitation to join the team.
-                                                        <div class="notification-date">2 min ago</div>
-                                                    </div>
+                                    <div class="notification-title text-center"> نوتیفیکیشن</div>
+                                        {% if notifications.length > 0 %}
+                                            <div class="notification-list">
+                                                <div class="list-group">
+                                                    {% for notify in notifications %}
+                                                        <a href="#" class="list-group-item list-group-item-action active">
+                                                            <div class="notification-info">
+                                                                <div class="notification-list-user-img"><img src="{{notify.nofity.from_user.profile_pic}}" alt="" class="user-avatar-md rounded-circle"></div>
+                                                                <div class="notification-list-user-block"><span class="notification-list-user-name">{{notify.nofity.from_user}} </span>{{notify.nofity.info}}.
+                                                                    <div class="notification-date">{{notify.nofity.time}}</div>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    {% endfor %}
                                                 </div>
-                                            </a>
-                                            <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="notification-info">
-                                                    <div class="notification-list-user-img"><img src="{% static 'dashbord/images/avatar-3.jpg' %}" alt="" class="user-avatar-md rounded-circle"></div>
-                                                    <div class="notification-list-user-block"><span class="notification-list-user-name">John Abraham </span>is now following you
-                                                        <div class="notification-date">2 days ago</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="notification-info">
-                                                    <div class="notification-list-user-img"><img src="{% static 'dashbord/images/avatar-4.jpg' %}" alt="" class="user-avatar-md rounded-circle"></div>
-                                                    <div class="notification-list-user-block"><span class="notification-list-user-name">Monaan Pechi</span> is watching your main repository
-                                                        <div class="notification-date">2 min ago</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#" class="list-group-item list-group-item-action">
-                                                <div class="notification-info">
-                                                    <div class="notification-list-user-img"><img src="{% static 'dashbord/images/avatar-5.jpg' %}" alt="" class="user-avatar-md rounded-circle"></div>
-                                                    <div class="notification-list-user-block"><span class="notification-list-user-name">Jessica Caruso</span>accepted your invitation to join the team.
-                                                        <div class="notification-date">2 min ago</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="text-center">
+                                                <p>هیچ پیمامی جهت نمایش وجود ندارد</p>
+                                            </div>
+                                        {% endif %}
                                 </li>
-                                <li>
-                                    <div class="list-footer"> <a href="#">نمایش همه</a></div>
-                                </li>
+                                {% if notifications.length > 4 %}
+                                    <li>
+                                        <div class="list-footer"> <a href="#">نمایش همه</a></div>
+                                    </li>
+                                {% endif %}
                             </ul>
                         </li>
                         <li class="nav-item dropdown connection">

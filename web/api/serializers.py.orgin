@@ -24,12 +24,6 @@ class User_Serializers(serializers.ModelSerializer):
 
 #Public serializer of User model
 class User_Serializers_Public(serializers.ModelSerializer):
-    first_name = serializers.CharField(required=False)
-    last_name = serializers.CharField(required=False)
-    post = serializers.CharField(required=False) 
-    email = serializers.CharField(required=False)
-    is_superuser = serializers.BooleanField(required=False)
-    profile_pic = serializers.ImageField(required=False)
     class Meta:
         model = User
         fields = ("id", "first_name", "last_name", "email", "post", "is_superuser", "profile_pic")
@@ -37,8 +31,6 @@ class User_Serializers_Public(serializers.ModelSerializer):
 #Serializer of Employees
 class Employees_Serializers(serializers.ModelSerializer):
     user = User_Serializers_Public(required=False)
-    post = serializers.CharField(required=False) 
-    profile_pic = serializers.ImageField(required=False)
 
     class Meta:
         model = Employees
@@ -54,7 +46,6 @@ class Employees_Serializers(serializers.ModelSerializer):
 #Serializer of Clients
 class Clients_Serializers(serializers.ModelSerializer):
     user = User_Serializers_Public(required=False)
-    profile_pic = serializers.ImageField(required=False)
 
     class Meta:
         model = Clients
@@ -73,19 +64,17 @@ class Projects_Serializers(serializers.ModelSerializer):
     geographical = Geographical_Serializer(required=False)
     allow = serializers.SerializerMethodField('get_allow_person', required=False)
     name = serializers.CharField(required=False)
-    image = serializers.ImageField(required=False)
     done = serializers.BooleanField(required=False)
     start_date = serializers.DateTimeField(required=False)
     price = serializers.IntegerField(required=False)
     class Meta:
         model = Projects
-        fields = ("id", "name", "image", "start_date", "price", "done", "employer", "geographical", "client", "allow")
+        fields = ("id", "name", "start_date", "price", "done", "employer", "geographical", "client", "allow")
     
     def create(self, validated_data):
         user_email = validated_data.pop("employer")["user"]["email"]
         client_email = validated_data.pop("client")["user"]["email"]
         geographical_data = validated_data.pop("geographical")
-
         emp_user = User.objects.get(email=user_email)
         employer = Employees.objects.get(user=emp_user)
         client_user = User.objects.get(email=client_email)
@@ -203,7 +192,7 @@ class TasksPerson_Serializers_Users(serializers.ModelSerializer):
         fields = ("person",)
 
 class Plans_Serializers(serializers.ModelSerializer):
-    image_url = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField('get_image_url')
     workSpace = serializers.SerializerMethodField('get_workspace')
     project = serializers.CharField(required=False)
     photo = serializers.ImageField(required=False)
@@ -289,7 +278,6 @@ class Documents_Serializers(serializers.ModelSerializer):
         return obj.file.url
 
 class Notifications_Serializers(serializers.ModelSerializer):
-    noti_sender = User_Serializers_Public(required=False, source="from_user")
     noti_sub = serializers.CharField(required=False, source="subtitle")
     noti_info = serializers.CharField(required=False, source="info")
     noti_time = serializers.DateTimeField(required=False, source="time")
@@ -299,7 +287,7 @@ class Notifications_Serializers(serializers.ModelSerializer):
 
     class Meta:
         model = Notifications
-        fields = ("id", "noti_sub", "noti_info", "noti_time", "noti_type", "noti_intent", "noti_sender", "noti_to_person")
+        fields = ("noti_sub", "noti_info", "noti_time", "noti_type", "noti_intent", "noti_to_person")
     
     def get_notiperson(self, obj):
         persons = NotiPerson.objects.filter(notify=obj)
@@ -307,6 +295,9 @@ class Notifications_Serializers(serializers.ModelSerializer):
         return data
 
 class NotiPerson_Serializers(serializers.ModelSerializer):
+    notify = serializers.CharField(required=False)
+    person = serializers.CharField(required=False)
+    read = serializers.BooleanField(required=False)
     class Meta:
         model = NotiPerson
         fields = "__all__"
@@ -328,8 +319,8 @@ class Gallery_Serializers(serializers.ModelSerializer):
 #Serializer of Comments model
 class Comments_Serializers(serializers.ModelSerializer):
     author = User_Serializers_Public(required=False)
-    image_url = serializers.SerializerMethodField()
-    image = serializers.CharField(required=False)
+    image_url = serializers.SerializerMethodField('get_image_url')
+    image = serializers.ImageField(required=False)
     text = serializers.CharField(required=False)
     date = serializers.DateTimeField(required=False)
     class Meta:
@@ -341,11 +332,11 @@ class Comments_Serializers(serializers.ModelSerializer):
 
 #Serializers of Photos
 class Photos_Serializers(serializers.ModelSerializer):
-    image_url = serializers.SerializerMethodField()
-    likes = serializers.SerializerMethodField()
-    comments = serializers.SerializerMethodField()
-    likes_count = serializers.SerializerMethodField()
-    comments_count = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField('get_image_url')
+    likes = serializers.SerializerMethodField('get_likes')
+    comments = serializers.SerializerMethodField('get_comments')
+    likes_count = serializers.SerializerMethodField('get_likes_count')
+    comments_count = serializers.SerializerMethodField('get_comments_count')
     project = serializers.CharField(required=False)
     gallery = serializers.CharField(required=False)
     image = serializers.ImageField(required=False)
@@ -374,9 +365,9 @@ class Photos_Serializers(serializers.ModelSerializer):
         return Comments.objects.filter(image=obj).count()
 
 class Likes_Serializers(serializers.ModelSerializer):
-    image_url = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField('get_image_url')
     user = serializers.CharField(required=False)
-    image = serializers.CharField(required=False)
+    image = serializers.ImageField(required=False)
     date = serializers.DateTimeField(required=False)
     class Meta:
         model = Likes
@@ -393,11 +384,10 @@ class Profile_Serializers(serializers.ModelSerializer):
     post = serializers.CharField(required=False) 
     email = serializers.CharField(required=False)
     password = serializers.CharField(required=False)
-    is_superuser = serializers.BooleanField(required=False)
     profile_pic = serializers.ImageField(required=False)
     class Meta:
         model = User
-        fields = ("id", "username", "first_name", "last_name", "post", "email", "password", "activity", "profile_pic", "is_superuser")
+        fields = ("id", "username", "first_name", "last_name", "post", "email", "password", "activity", "profile_pic")
     def get_useractivity(self, obj):
         activity = UserActivity.objects.filter(user=obj)
         data = UserActivity_Serializers(activity, many=True).data
@@ -417,7 +407,7 @@ class Profile_Serializers(serializers.ModelSerializer):
         return instance
 
 class UserActivity_Serializers(serializers.ModelSerializer):
-    act_pic = serializers.ImageField(required=False, source='image')
+    act_pic = serializers.CharField(required=False, source='image')
     act_sub = serializers.CharField(required=False, source='subtitle')
     act_text = serializers.CharField(required=False, source='text')
     act_time = serializers.DateTimeField(required=False, source='time')

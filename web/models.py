@@ -126,6 +126,7 @@ class ToDo(models.Model):
         return self.details
 
 class Notifications(models.Model):
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE)
     subtitle = models.TextField()
     info = models.TextField()
     time = models.DateTimeField(auto_now=True)
@@ -141,7 +142,7 @@ class NotiPerson(models.Model):
     read = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.person
+        return str(self.person)
 
 class Gallery(models.Model):
     name = models.TextField()
@@ -182,4 +183,4 @@ class UserActivity(models.Model):
     image = models.ImageField(default="default-activity.jpg")
     subtitle = models.TextField()
     text = models.TextField()
-    time = models.DateTimeField()
+    time = models.DateTimeField(auto_now=True)

@@ -15,7 +15,15 @@ userpatterns = [
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('projects/', views.projects, name="projects"),
+    path('projects/<int:pk>', views.project_detail, name="project detail"),
+    path('employees/', views.employees, name="employees"),
+    path('employees/<int:pk>', views.employee_detail, name="employee detail"),
+    path('about/', views.about, name="about us"),
+    path('services/', views.services, name="services"),
+    path('contact/', views.contact, name="contact"),
     path('login/', views.loginPage, name="login"),
+    path('login-new/', views.loginPage_new, name="login new"),
     path('dashbord/', include(dashbordpatterns)),
     path('user/', include(userpatterns)),
     path('logout/', views.logoutPage, name="logout"),

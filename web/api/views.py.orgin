@@ -12,22 +12,6 @@ from django.http import Http404
 import json
 #/=========================================================
 
-def Allow_Notify_send(project, from_user, allow_list):
-    try:
-        subtitle= "پروژه ای جدید ایجاد شده است."
-        info = f"پروژه ای جدید به اسم {project.name} و شناسه ی {project.id} ایجاد شده است. شما هم به لیست افراد مجاز اضافه شده اید."
-        kind = "پروژه جدید"
-        notify = Notifications.objects.create(from_user=from_user, subtitle=subtitle, info=info,
-            kind=kind, intent="projects")
-        for allow in allow_list:
-            email = allow["mation"]
-            user = User.objects.get(email=email)
-            AllowPersons.objects.create(user=user, project=project)
-            NotiPerson.objects.create(notify=notify, person=user)
-        return True
-    except Exception as e:
-        return e
-
 #============================Views===========================
 
 #View of api/ url
@@ -135,21 +119,11 @@ class projects_list(APIView):
         data = request.data
         serializer = Projects_Serializers(data=data)
         if serializer.is_valid():
-            project = serializer.save()
-            from_user = request.user
-            allow_list = data["allow"]
-            send_notify_add_allow = Allow_Notify_send(project, from_user, allow_list)
-            if send_notify_add_allow:
-                return Response(status=201, data={
-                    "status": "ok",
-                    "project": serializer.data
-                })
-            else:
-                project.delete() #TODO:Remove this line!!!!!!!
-                return Response(status=400, data={
-                    "status": "bad",
-                    "error": send_notify_add_allow
-                })
+            serializer.save()
+            return Response(status=201, data={
+                "status": "ok",
+                "project": serializer.data
+            })
         return Response(status=400, data={
             "status": "bad",
             "error": serializer.errors
@@ -642,8 +616,6 @@ class Notifications_list(APIView):
     def post(self, request, format=None):
         self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
-        user= request.user
-        data["noti_sender"] = user
         serializer = Notifications_Serializers(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -1071,7 +1043,6 @@ class Comments_detail(APIView):
 #View of api/trakonesh/ url
 class Purchases_list(APIView):
     def get(self, request, format=None):
-        user = request.user
         if user.is_superuser:
             all_Purchases = Purchases.objects.all()
         else:
@@ -1083,9 +1054,7 @@ class Purchases_list(APIView):
             "purchases": serializer.data
         })
     def post(self, request, format=None):
-        user = request.user
         data = request.data
-        data["buyer"] = user
         serializer = Purchases_serializers(data=data)
         if serializer.is_valid():
             serializer.save()
