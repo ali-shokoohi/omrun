@@ -114,6 +114,7 @@
                                                         <th class="border-0">زمان سفارش</th>
                                                         <th class="border-0">مشتری</th>
                                                         <th class="border-0">وضعیت</th>
+                                                        <th class="border-0">لینک</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -132,10 +133,11 @@
                                                         {% else %}
                                                             <td>در ‌دست ‌انجام <span class="badge-dot badge-brand mr-1"></span></td>
                                                         {% endif %}
+                                                        <td><a href="/dashbord/project/view/{{project.id}}">مشاهده</a></td>
                                                     </tr>
                                                     {% endfor %}
                                                     <tr>
-                                                        <td colspan="9"><a href="#" class="btn btn-outline-light float-right">مشاهده جزئیات</a></td>
+                                                        <td colspan="9"><a href="/dashbord/project/create/" class="btn btn-outline-light float-right">ایجاد پروژه جدید</a></td>
                                                     </tr>
                                                 </tbody>
                                             </table>

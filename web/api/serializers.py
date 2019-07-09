@@ -2,6 +2,24 @@ from rest_framework import serializers
 from web.models import Purchases, Comments, Projects, Plans, ToDo, Photos, ToDo, Gallery, TasksPerson, Notifications, UserActivity
 from web.models import User, Employees, Geographical, Clients, Tasks, Likes, AllowPersons, Documents, WorkSpace, NotiPerson
 from rest_framework.authtoken.models import Token
+from django.core.files import File
+from django.utils import timezone
+from PIL import Image
+import base64
+import re
+
+def decode_base64(data, altchars=b'+/'):
+    """Decode base64, padding being optional.
+
+    :param data: Base64 data as an ASCII byte string
+    :returns: The decoded byte string.
+
+    """
+    data = re.sub(rb'[^a-zA-Z0-9%s]+' % altchars, b'', data)  # normalize
+    missing_padding = len(data) % 4
+    if missing_padding:
+        data += b'='* (4 - missing_padding)
+    return base64.b64decode(data, altchars)
 
 #Serializer of Token model
 class Token_Serializers(serializers.ModelSerializer):
@@ -68,6 +86,7 @@ class Geographical_Serializer(serializers.ModelSerializer):
 
 #Serializer of Purchases model
 class Projects_Serializers(serializers.ModelSerializer):
+    peymankar = serializers.CharField(required=False)
     employer = Employees_Serializers(required=False)
     client = Clients_Serializers(required=False)
     geographical = Geographical_Serializer(required=False)
@@ -79,20 +98,23 @@ class Projects_Serializers(serializers.ModelSerializer):
     price = serializers.IntegerField(required=False)
     class Meta:
         model = Projects
-        fields = ("id", "name", "image", "start_date", "price", "done", "employer", "geographical", "client", "allow")
+        fields = ("id", "name", "image", "start_date", "price", "done", "employer", "geographical", "client", "allow", "peymankar")
     
     def create(self, validated_data):
-        user_email = validated_data.pop("employer")["user"]["email"]
-        client_email = validated_data.pop("client")["user"]["email"]
-        geographical_data = validated_data.pop("geographical")
 
-        emp_user = User.objects.get(email=user_email)
-        employer = Employees.objects.get(user=emp_user)
-        client_user = User.objects.get(email=client_email)
-        client = Clients.objects.get(user=client_user)
-        geographical = Geographical.objects.create(**geographical_data)
-        project = Projects.objects.create(employer=employer, client=client, geographical=geographical,
-         **validated_data)
+#        user_email = validated_data.pop("employer")["user"]["email"]
+#        client_email = validated_data.pop("client")["user"]["email"]
+#        geographical_data = validated_data.pop("geographical")
+
+#        emp_user = User.objects.get(email=user_email)
+#        employer = Employees.objects.get(user=emp_user)
+#        client_user = User.objects.get(email=client_email)
+#        client = Clients.objects.get(user=client_user)
+        peymankar = validated_data.pop("peymankar")
+        geographical = Geographical.objects.latest("id")
+#        project = Projects.objects.create(employer=employer, client=client, geographical=geographical, **validated_data)
+        project = Projects.objects.create(peymankar=peymankar, geographical=geographical, **validated_data)
+#        project = Projects.objects.create(peymankar=peymankar, **validated_data)
         return project
     
     def update(self, instance, validated_data):
@@ -110,6 +132,7 @@ class Projects_Serializers(serializers.ModelSerializer):
         instance.name = validated_data.get('name', instance.name)
         instance.start_date = validated_data.get('start_date', instance.start_date)
         instance.price = validated_data.get('price', instance.price)
+        instance.peymankar = validated_data.get('peymankar', instance.peymankar)
         instance.done = validated_data.get('done', instance.done)
         instance.save()
 
@@ -178,13 +201,10 @@ class ToDo_serializers(serializers.ModelSerializer):
 
         return todo
     def update(self, instance, validated_data):
-        task_id = validated_data.pop("task")
-
-        task = instance.task
 
         instance.id = validated_data.get('id', instance.id)
-        instance.id = validated_data.get('details', instance.id)
-        instance.id = validated_data.get('done', instance.id)
+        instance.detials = validated_data.get('details', instance.id)
+        instance.done = validated_data.get('done', instance.id)
         instance.save()
 
         return instance
@@ -204,6 +224,7 @@ class TasksPerson_Serializers_Users(serializers.ModelSerializer):
 
 class Plans_Serializers(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
+    name = serializers.CharField(required=False)
     workSpace = serializers.SerializerMethodField('get_workspace')
     project = serializers.CharField(required=False)
     photo = serializers.ImageField(required=False)
@@ -212,7 +233,7 @@ class Plans_Serializers(serializers.ModelSerializer):
 
     class Meta:
         model = Plans
-        fields = ("id", "photo", "data", "kind", "project", "image_url", "workSpace")
+        fields = ("id", "name", "photo", "data", "kind", "project", "image_url", "workSpace")
     
     def get_image_url(self, obj):
         return obj.photo.url
@@ -229,9 +250,6 @@ class Plans_Serializers(serializers.ModelSerializer):
         return plan
     
     def update(self, instance, validated_data):
-        project_id = validated_data.pop("project")
-
-        project = instance.project
 
         instance.id = validated_data.get('id', instance.id)
         instance.photo = validated_data.get('photo', instance.photo)
@@ -244,11 +262,24 @@ class Plans_Serializers(serializers.ModelSerializer):
 class WorkSpace_Serializers(serializers.ModelSerializer):
     plan = serializers.CharField(required=False)
     photo = serializers.ImageField(required=False)
+    photo_str = serializers.CharField(required=False)
     data = serializers.CharField(required=False)
     subtitle = serializers.CharField(required=False)
     class Meta:
         model = WorkSpace
         fields = "__all__"
+    
+    def create(self, validated_data):
+        plan_name = validated_data.pop("plan")
+        plan = Plans.objects.get(name=plan_name)
+        image_data = validated_data.pop("photo_str")
+        image_data += "=" * ((4 - len(image_data) % 4) % 4) 
+        now = str(timezone.now())
+        with open(f'media/{now}.jpg', 'wb') as img:
+            img.write(base64.b64decode(image_data))
+        image = File(open(f'media/{now}.jpg', 'rb'))
+        workspace = WorkSpace.objects.create(plan=plan, photo=image, **validated_data)
+        return workspace
 
 class AllowPersons_Serializers(serializers.ModelSerializer):
     user = serializers.CharField(required=False)
@@ -319,25 +350,18 @@ class Gallery_Serializers(serializers.ModelSerializer):
     class Meta:
         model = Gallery
         fields = ("id", "gallery_name", "admin", "photos")
+    
+    def create(self, validated_data):
+        admin_id = validated_data.pop("admin")
+        admin = User.objects.get(email=admin_id["email"])
+        gallery = Gallery.objects.create(admin=admin, **validated_data)
+
+        return gallery
 
     def get_photo(self, gallery):
         photos = Photos.objects.filter(gallery=gallery)
         data = Photos_Serializers(photos, many=True).data
         return data
-
-#Serializer of Comments model
-class Comments_Serializers(serializers.ModelSerializer):
-    author = User_Serializers_Public(required=False)
-    image_url = serializers.SerializerMethodField()
-    image = serializers.CharField(required=False)
-    text = serializers.CharField(required=False)
-    date = serializers.DateTimeField(required=False)
-    class Meta:
-        model = Comments
-        fields = "__all__"
-    
-    def get_image_url(self, obj):
-        return obj.image.image.url
 
 #Serializers of Photos
 class Photos_Serializers(serializers.ModelSerializer):
@@ -348,12 +372,29 @@ class Photos_Serializers(serializers.ModelSerializer):
     comments_count = serializers.SerializerMethodField()
     project = serializers.CharField(required=False)
     gallery = serializers.CharField(required=False)
-    image = serializers.ImageField(required=False)
+    image = serializers.CharField(required=False)
     caption = serializers.CharField(required=False)
     class Meta:
         model = Photos
         fields = "__all__"
     
+    def create(self, validated_data):
+        project_data = validated_data.pop("project")
+        gallery_data = validated_data.pop("gallery")
+
+        gallery = Gallery.objects.get(name=gallery_data)
+        project = Projects.objects.get(id=project_data)
+
+        image_data = validated_data.pop("image")
+        image_data += "=" * ((4 - len(image_data) % 4) % 4) 
+        now = str(timezone.now())
+        with open(f'media/{now}.jpg', 'wb') as img:
+            img.write(base64.b64decode(image_data))
+        image = File(open(f'media/{now}.jpg', 'rb'))
+
+        photo = Photos.objects.create(gallery=gallery, image=image, project=project, **validated_data)
+        return photo
+
     def get_image_url(self, obj):
         return obj.image.url
     
@@ -372,6 +413,20 @@ class Photos_Serializers(serializers.ModelSerializer):
         return Likes.objects.filter(image=obj).count()
     def get_comments_count(self, obj):
         return Comments.objects.filter(image=obj).count()
+
+#Serializer of Comments model
+class Comments_Serializers(serializers.ModelSerializer):
+    author = User_Serializers_Public(required=False)
+    image_url = serializers.SerializerMethodField()
+    image = serializers.CharField(required=False)
+    text = serializers.CharField(required=False)
+    date = serializers.DateTimeField(required=False)
+    class Meta:
+        model = Comments
+        fields = "__all__"
+    
+    def get_image_url(self, obj):
+        return obj.image.image.url
 
 class Likes_Serializers(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()

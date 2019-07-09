@@ -70,21 +70,23 @@ class Projects(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(auto_now_add=True)
     done = models.BooleanField()
-    geographical = models.ForeignKey(Geographical, on_delete=models.CASCADE)
-    employer = models.ForeignKey(Employees, on_delete=models.CASCADE)
-    client = models.ForeignKey(Clients, on_delete=models.CASCADE)
+    geographical = models.ForeignKey(Geographical, on_delete=models.CASCADE, null=True)
+    peymankar = models.TextField()
+    employer = models.ForeignKey(Employees, on_delete=models.CASCADE, null=True)
+    client = models.ForeignKey(Clients, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
 
 class Plans(models.Model):
+    name = models.TextField(null=True)
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     photo = models.ImageField(default="default-plan.png")
-    data = models.TextField()
-    kind = models.TextField()
+    data = models.TextField(null=True)
+    kind = models.TextField(default="یک نقشه جدید")
 
     def __str__(self):
-        return self.project.name
+        return self.name
 
 class AllowPersons(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
@@ -94,9 +96,10 @@ class AllowPersons(models.Model):
         return str(self.user)
 
 class WorkSpace(models.Model):
-    subtitle = models.TextField()
+    subtitle = models.TextField(null=True)
+    text = models.TextField(null=True)
     photo = models.ImageField(default="default-plan.png")
-    data = models.TextField()
+    data = models.TextField(null=True)
     plan = models.ForeignKey(Plans, on_delete=models.CASCADE)
 
 class Tasks(models.Model):
@@ -155,11 +158,12 @@ class Gallery(models.Model):
 class Photos(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE)
+    name = models.TextField()
     image = models.ImageField()
     caption = models.TextField()
 
     def __str__(self):
-        return self.project.name
+        return str(self.id)
 
 class Comments(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)

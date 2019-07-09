@@ -4,8 +4,15 @@ from django.conf.urls.static import static
 
 from . import views
 
+projectpatterns = [
+    path('view/<int:pk>', views.project_show, name="project show"),
+    path('update/<int:pk>', views.project_update, name="project update"),
+    path('create/', views.project_create, name="project create"),
+]
+
 dashbordpatterns = [
     path('', views.dashbord, name="dashbord"),
+    path('project/', include(projectpatterns)),
 ]
 
 userpatterns = [

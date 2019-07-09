@@ -5,7 +5,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework import permissions
 from rest_framework.authtoken.models import Token
 from web.models import User, Employees, Clients, Projects, Plans, Tasks, ToDo, Photos, Comments, Likes, AllowPersons, Gallery, Purchases, Documents, TasksPerson, WorkSpace, Notifications, NotiPerson, UserActivity
-from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers, AllowPersons_Serializers, Purchases_serializers, TasksPerson_Serializers, Notifications_Serializers, Profile_Serializers, UserActivity_Serializers
+from web.api.serializers import Projects_Serializers, Plans_Serializers, Employees_Serializers, Likes_Serializers, AllowPersons_Serializers, Purchases_serializers, TasksPerson_Serializers, Notifications_Serializers, Profile_Serializers, UserActivity_Serializers, Geographical_Serializer
 from web.api.serializers import Tasks_Serializers, ToDo_serializers, User_Serializers, Photos_Serializers, Comments_Serializers, Gallery_Serializers, Documents_Serializers, WorkSpace_Serializers, Notifications_Serializers, NotiPerson_Serializers, User_Serializers_Public
 from django.contrib.auth.hashers import check_password
 from django.http import Http404
@@ -133,27 +133,36 @@ class projects_list(APIView):
     def post(self, request, format=None):
         self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
-        serializer = Projects_Serializers(data=data)
-        if serializer.is_valid():
-            project = serializer.save()
-            from_user = request.user
-            allow_list = data["allow"]
-            send_notify_add_allow = Allow_Notify_send(project, from_user, allow_list)
-            if send_notify_add_allow:
-                return Response(status=201, data={
-                    "status": "ok",
-                    "project": serializer.data
-                })
-            else:
-                project.delete() #TODO:Remove this line!!!!!!!
-                return Response(status=400, data={
-                    "status": "bad",
-                    "error": send_notify_add_allow
-                })
-        return Response(status=400, data={
-            "status": "bad",
-            "error": serializer.errors
-        })
+        geographical_data = json.loads(data["geographical"])["geographical"]
+        serializer_geo = Geographical_Serializer(data=geographical_data)
+        if serializer_geo.is_valid():
+            serializer_geo.save()
+            serializer = Projects_Serializers(data=data)
+            if serializer.is_valid():
+                project = serializer.save()
+                from_user = request.user
+                allow_list = json.loads(data["allow"])["allow"]
+                send_notify_add_allow = Allow_Notify_send(project, from_user, allow_list)
+                if send_notify_add_allow:
+                    return Response(status=201, data={
+                        "status": "ok",
+                        "project": serializer.data
+                    })
+                else:
+                    project.delete() #TODO:Remove this line!!!!!!!
+                    return Response(status=400, data={
+                        "status": "bad",
+                        "error": send_notify_add_allow
+                    })
+            return Response(status=400, data={
+                "status": "bad",
+                "error": serializer.errors
+            })
+        else:
+            return Response(status=400, data={
+                "status": "bad",
+                "error": serializer_geo.errors
+            })
 
 #View of api/projects/<int:pk>/ url
 class projects_detial(APIView):
@@ -171,6 +180,7 @@ class projects_detial(APIView):
         })
     def put(self, request, pk, format=None):
         self.permission_classes = (permissions.IsAdminUser,)
+        data = request.data
         project = self.get_object(pk)
         serializer = Projects_Serializers(project, data=request.data)
         if serializer.is_valid():
@@ -198,11 +208,14 @@ class plans_list(APIView):
         try:
             return self.request.GET["project"]
         except:
-            raise Http404
+            return False
     def get_object(self, p_id):
         try:
-            project = Projects.objects.get(id=p_id)
-            return Plans.objects.filter(project=project)
+            if p_id is not False:
+                project = Projects.objects.get(id=p_id)
+                return Plans.objects.filter(project=project)
+            else:
+                return Plans.objects.all()
         except Plans.DoesNotExist:
             raise Http404
         except Projects.DoesNotExist:
@@ -273,11 +286,14 @@ class WorkSpace_list(APIView):
         try:
             return self.request.GET["plan"]
         except:
-            raise Http404
+            return False
     def get_object(self, p_id):
         try:
-            plan = Plans.objects.get(id=p_id)
-            return WorkSpace.objects.filter(plan=plan)
+            if p_id is not False:
+                plan = Plans.objects.get(id=p_id)
+                return WorkSpace.objects.filter(plan=plan)
+            else:
+                return WorkSpace.objects.all()
         except WorkSpace.DoesNotExist:
             raise Http404
         except Plans.DoesNotExist:
@@ -293,6 +309,27 @@ class WorkSpace_list(APIView):
     def post(self, request, format=None):
         self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
+        plan = data["plan"][0]
+        is_plan = Plans.objects.filter(name=plan).exists()
+        if is_plan is not True:
+            project_id = data["project"]
+            plan_data = {
+                "name": plan,
+                "project": project_id
+            }
+            plan_serializer = Plans_Serializers(data=plan_data)
+            if plan_serializer.is_valid():
+                plan = plan_serializer.save()
+            else:
+                return Response(status=400, data={
+                    "status": "bad",
+                    "error": plan_serializer.errors
+                })
+        if type(plan) is not str:
+            plan = str(plan)
+        data._mutable = True
+        data["plan"] = plan
+
         serializer = WorkSpace_Serializers(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -843,6 +880,29 @@ class Photos_list(APIView):
     def post(self, request, format=None):
         self.permission_classes = (permissions.IsAdminUser,)
         data = request.data
+        data._mutable = True
+        user = request.user
+        gallery = data["gallery_name"][0]
+        is_gallery = Gallery.objects.filter(name=gallery).exists()
+        if is_gallery is not True:
+            admin = User_Serializers_Public(user).data
+            admin.pop("profile_pic")
+            gallery_data = {
+                "gallery_name": gallery,
+                "admin": admin
+            }
+            gallery_serializer = Gallery_Serializers(data=gallery_data)
+            if gallery_serializer.is_valid():
+                gallery = gallery_serializer.save()
+            else:
+                print("error:", gallery_serializer.errors)
+                return Response(status=400, data={
+                    "status": "bad",
+                    "error": gallery_serializer.errors
+                })
+        if type(gallery) is not str:
+            gallery = str(gallery)
+        data["gallery"] = gallery
         serializer = Photos_Serializers(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -850,6 +910,7 @@ class Photos_list(APIView):
                 "status": "ok",
                 "photos": serializer.data
             })
+        print("error:", serializer.errors)
         return Response(status=400, data={
             "status": "bad",
             "error": serializer.errors

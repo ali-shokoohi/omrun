@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from web.models import User, Employees, CommentsOfWeb, Projects, Photos, NotiPerson, AllowPersons
-from web.forms import UserForm, EmployeesForm
+from web.forms import UserForm, EmployeesForm, ProjectForm
 #/=========================================================
 
 #Some needed function here!
@@ -268,6 +268,66 @@ def profile_update(request):
                 context["error"] = user_form.errors
                 #context["error"] = UserForm.errors
         return render(request=request, template_name="profile/update.html", context=context)
+    else:
+        #If not session is here redirect to login/ url
+        return HttpResponseRedirect(redirect_to="/login/")
+
+#View of /dashbord/project/view/<int:pk>
+def project_show(request, pk):
+    if request.user.is_authenticated:
+        project = get_object_or_404(Projects, pk=pk)
+        context = {
+            "project": project,
+            #...
+        }
+        return render(request=request, template_name="projects/index.html", context=context)
+    else:
+        #If not session is here redirect to login/ url
+        return HttpResponseRedirect(redirect_to="/login/")
+
+#View of /dashbord/project/update/<int:pk>
+def project_update(request, pk):
+    if request.user.is_authenticated:
+        user = request.user
+        employees = Employees.objects.all()#Get all employees
+        project = get_object_or_404(Projects, pk=pk)
+        context = dict()
+        context["user"] = user
+        if request.method == "GET":
+            context["project"] = project
+            context["employees"] = employees
+        elif request.method == "POST":
+            data = request.POST
+            project = get_object_or_404(Projects, pk=pk)
+            project_form = UserForm(instance=project, data=data)
+            if project_form.is_valid():
+                project_form.save()
+                context["message"] = f"پروژه ی {project.name} با موفقیت بروزرسانی شد!"
+            else:
+                context["error"] = project_form.errors
+        return render(request=request, template_name="projects/update.html", context=context)
+    else:
+        #If not session is here redirect to login/ url
+        return HttpResponseRedirect(redirect_to="/login/")
+
+#View of /dashbord/project/create/
+def project_create(request):
+    if request.user.is_authenticated:
+        user = request.user
+        employees = Employees.objects.all()#Get all employees
+        context = dict()
+        context["user"] = user
+        if request.method == "GET":
+            context["employees"] = employees
+        elif request.method == "POST":
+            data = request.POST
+            project_form = UserForm(data=data)
+            if project_form.is_valid():
+                project_form.save()
+                context["message"] = f"پروژه ی {project.name} با موفقیت ایجاد شد!"
+            else:
+                context["error"] = project_form.errors
+        return render(request=request, template_name="projects/create.html", context=context)
     else:
         #If not session is here redirect to login/ url
         return HttpResponseRedirect(redirect_to="/login/")
